@@ -15,13 +15,6 @@ temp.errors
 *.ini
 .d/
 
-# clion
-.idea/
+# Clion
 cmake-build-debug/
-
-# OSX
-.DS_Store
-
-# floobits
-.floo
-.flooignore
+.idea/
