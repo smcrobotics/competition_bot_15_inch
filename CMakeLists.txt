@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(robot_code)
+project(competition_bot_15_inch)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -26,12 +26,12 @@ include_directories(include/okapi/api/device/button)
 include_directories(include/okapi/api/device/motor)
 include_directories(include/okapi/api/device/rotarysensor)
 include_directories(include/okapi/api/filter)
+include_directories(include/okapi/api/odometry)
 include_directories(include/okapi/api/units)
 include_directories(include/okapi/api/util)
 include_directories(include/okapi/impl)
 include_directories(include/okapi/impl/chassis)
 include_directories(include/okapi/impl/chassis/controller)
-include_directories(include/okapi/impl/chassis/model)
 include_directories(include/okapi/impl/control)
 include_directories(include/okapi/impl/control/async)
 include_directories(include/okapi/impl/control/iterative)
@@ -48,8 +48,9 @@ include_directories(include/okapi/pathfinder/include/pathfinder)
 include_directories(include/okapi/pathfinder/include/pathfinder/followers)
 include_directories(include/okapi/pathfinder/include/pathfinder/modifiers)
 include_directories(include/pros)
+include_directories(include/subsystems)
 
-add_executable(robot_code
+add_executable(competition_bot_15_inch
         include/display/lv_core/lv_group.h
         include/display/lv_core/lv_indev.h
         include/display/lv_core/lv_lang.h
@@ -136,10 +137,14 @@ add_executable(robot_code
         include/okapi/api/chassis/controller/chassisControllerIntegrated.hpp
         include/okapi/api/chassis/controller/chassisControllerPid.hpp
         include/okapi/api/chassis/controller/chassisScales.hpp
+        include/okapi/api/chassis/controller/defaultOdomChassisController.hpp
+        include/okapi/api/chassis/controller/odomChassisController.hpp
         include/okapi/api/chassis/model/chassisModel.hpp
+        include/okapi/api/chassis/model/hDriveModel.hpp
         include/okapi/api/chassis/model/readOnlyChassisModel.hpp
         include/okapi/api/chassis/model/skidSteerModel.hpp
         include/okapi/api/chassis/model/threeEncoderSkidSteerModel.hpp
+        include/okapi/api/chassis/model/threeEncoderXDriveModel.hpp
         include/okapi/api/chassis/model/xDriveModel.hpp
         include/okapi/api/control/async/asyncController.hpp
         include/okapi/api/control/async/asyncLinearMotionProfileController.hpp
@@ -159,11 +164,13 @@ add_executable(robot_code
         include/okapi/api/control/iterative/iterativeVelPidController.hpp
         include/okapi/api/control/util/controllerRunner.hpp
         include/okapi/api/control/util/flywheelSimulator.hpp
+        include/okapi/api/control/util/pathfinderUtil.hpp
         include/okapi/api/control/util/pidTuner.hpp
         include/okapi/api/control/util/settledUtil.hpp
         include/okapi/api/control/closedLoopController.hpp
         include/okapi/api/control/controllerInput.hpp
         include/okapi/api/control/controllerOutput.hpp
+        include/okapi/api/control/offsettableControllerInput.hpp
         include/okapi/api/device/button/abstractButton.hpp
         include/okapi/api/device/button/buttonBase.hpp
         include/okapi/api/device/motor/abstractMotor.hpp
@@ -179,6 +186,13 @@ add_executable(robot_code
         include/okapi/api/filter/medianFilter.hpp
         include/okapi/api/filter/passthroughFilter.hpp
         include/okapi/api/filter/velMath.hpp
+        include/okapi/api/odometry/odometry.hpp
+        include/okapi/api/odometry/odomMath.hpp
+        include/okapi/api/odometry/odomState.hpp
+        include/okapi/api/odometry/point.hpp
+        include/okapi/api/odometry/stateMode.hpp
+        include/okapi/api/odometry/threeEncoderOdometry.hpp
+        include/okapi/api/odometry/twoEncoderOdometry.hpp
         include/okapi/api/units/QAcceleration.hpp
         include/okapi/api/units/QAngle.hpp
         include/okapi/api/units/QAngularAcceleration.hpp
@@ -203,13 +217,13 @@ add_executable(robot_code
         include/okapi/api/util/supplier.hpp
         include/okapi/api/util/timeUtil.hpp
         include/okapi/api/coreProsAPI.hpp
-        include/okapi/impl/chassis/controller/chassisControllerFactory.hpp
-        include/okapi/impl/chassis/model/chassisModelFactory.hpp
-        include/okapi/impl/control/async/asyncControllerFactory.hpp
+        include/okapi/impl/chassis/controller/chassisControllerBuilder.hpp
+        include/okapi/impl/control/async/asyncMotionProfileControllerBuilder.hpp
+        include/okapi/impl/control/async/asyncPosControllerBuilder.hpp
+        include/okapi/impl/control/async/asyncVelControllerBuilder.hpp
         include/okapi/impl/control/iterative/iterativeControllerFactory.hpp
         include/okapi/impl/control/util/controllerRunnerFactory.hpp
         include/okapi/impl/control/util/pidTunerFactory.hpp
-        include/okapi/impl/control/util/settledUtilFactory.hpp
         include/okapi/impl/device/button/adiButton.hpp
         include/okapi/impl/device/button/controllerButton.hpp
         include/okapi/impl/device/motor/adiMotor.hpp
@@ -222,8 +236,8 @@ add_executable(robot_code
         include/okapi/impl/device/adiUltrasonic.hpp
         include/okapi/impl/device/controller.hpp
         include/okapi/impl/device/controllerUtil.hpp
-        include/okapi/impl/device/vision.hpp
         include/okapi/impl/filter/velMathFactory.hpp
+        include/okapi/impl/util/configurableTimeUtilFactory.hpp
         include/okapi/impl/util/rate.hpp
         include/okapi/impl/util/timer.hpp
         include/okapi/impl/util/timeUtilFactory.hpp
@@ -245,6 +259,8 @@ add_executable(robot_code
         include/pros/api_legacy.h
         include/pros/apix.h
         include/pros/colors.h
+        include/pros/imu.h
+        include/pros/imu.hpp
         include/pros/llemu.h
         include/pros/llemu.hpp
         include/pros/misc.h
@@ -257,6 +273,14 @@ add_executable(robot_code
         include/pros/serial.hpp
         include/pros/vision.h
         include/pros/vision.hpp
+        include/subsystems/intake.h
+        include/subsystems/subsystems.h
+        include/subsystems/tray.h
         include/api.h
+        include/constants.h
         include/main.h
-        src/main.cpp include/constants.h include/tasks.h src/tasks.cpp include/subsystems/intake.h src/subsystems/intake.cpp include/subsystems/subsystems.h include/subsystems/tray.h src/subsystems/tray.cpp)
+        include/tasks.h
+        src/subsystems/intake.cpp
+        src/subsystems/tray.cpp
+        src/main.cpp
+        src/tasks.cpp)
