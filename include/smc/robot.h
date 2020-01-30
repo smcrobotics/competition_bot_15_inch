@@ -11,8 +11,8 @@
 #ifndef _ROBOT_H
 #define _ROBOT_H
 
-#include "subsystems/intake.h"
-#include "subsystems/tray.h"
+#include "smc/subsystems/lift.h"
+#include "smc/subsystems/claw.h"
 #include "subsystems/drive.h"
 #include "util/constants.h"
 

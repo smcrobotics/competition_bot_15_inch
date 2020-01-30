@@ -17,27 +17,24 @@ namespace robot {
     /* End drive motor block */
 
 
-    /* Begin intake block */
-    const int INTAKE_MOTOR_PORT_LEFT = -11; // TODO: Placeholder value
-    const int INTAKE_MOTOR_PORT_RIGHT = 1; // TODO: Placeholder value
-    const int INTAKE_POS_MOTOR_PORT_LEFT = -12;
-    const int INTAKE_POS_MOTOR_PORT_RIGHT = 3;
+    /* Begin lift block */
+    const int LIFT_MOTOR_PORT_LEFT = -11; // TODO: Placeholder value
+    const int LIFT_MOTOR_PORT_RIGHT = 1; // TODO: Placeholder value
+    
+    const char LIFT_POS_LIMIT_SWITCH_UP = 'A'; // TODO: Placeholder value
+    const char LIFT_POS_LIMIT_SWITCH_DOWN = 'A'; //TODO: Placeholder value
 
-    const char INTAKE_POS_LIMIT_SWITCH_UP = 'A'; // TODO: Placeholder value
-    const char INTAKE_POS_LIMIT_SWITCH_DOWN = 'A'; //TODO: Placeholder value
-
-    const float INTAKE_DOWN_POS = 0;
-    const float INTAKE_UP_POS_LEFT = 910.0;
-    const float INTAKE_UP_POS_RIGHT = 910.0;
-    /* End intake block */
+    const float LIFT_DOWN_POS = 0;
+    const float LIFT_UP_POS_LEFT = 910.0;
+    const float LIFT_UP_POS_RIGHT = 910.0;
+    /* End lift block */
 
 
-    /* Begin tray block */
-    const int TRAY_POS_MOTOR_PORT = 15;
-    const int TRAY_MOTOR_POS_UP = 140; // TODO: Placeholder value
-
-    const char TRAY_POS_DOWN_LIMIT_SWITCH = 'H';
-    /* End tray block */
+    /* Begin claw block */
+    const int CLAW_MOTOR_PORT = 15;
+    const int CLAW_MOTOR_POS_OPEN = 140; // TODO: Placeholder value
+    const int CLAW_MOTOR_POS_CLOSED = 0;
+    /* End claw block */
 
 
     /* Begin random global pointer block */
@@ -47,16 +44,14 @@ namespace robot {
 }
 
 namespace bindings {
-    const auto INTAKE_BUTTON  = okapi::ControllerDigital::R1; // TODO: Placeholder value
+    const auto LIFT_BUTTON  = okapi::ControllerDigital::R1; // TODO: Placeholder value
     const auto OUTTAKE_BUTTON = okapi::ControllerDigital::L1;
 
-    const auto TOGGLE_INTAKE_POS = okapi::ControllerDigital::B;
-    const auto INTAKE_POS_UP = okapi::ControllerDigital::up;
-    const auto INTAKE_POS_DOWN = okapi::ControllerDigital::left;
+    const auto TOGGLE_LIFT_POS = okapi::ControllerDigital::B;
+    const auto LIFT_POS_UP = okapi::ControllerDigital::up;
+    const auto LIFT_POS_DOWN = okapi::ControllerDigital::left;
 
-    const auto TOGGLE_TRAY_POS = okapi::ControllerDigital::A;
-    const auto LOWER_TRAY = okapi::ControllerDigital::down;
-    const auto RAISE_TRAY = okapi::ControllerDigital::right;
+    const auto TOGGLE_CLAW = okapi::ControllerDigital::A;
 
     const auto DRIVE_BRAKE_TOGGLE = okapi::ControllerDigital::X;
 }

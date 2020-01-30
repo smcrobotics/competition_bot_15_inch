@@ -1,8 +1,23 @@
+#include <unistd.h>
+#define chdir f_chdir
+
+
 #include "main.h"
-#include "constants.h"
-#include "tasks.h"
+
+#include "smc/robot.h"
+#include "smc/tasks.h"
+#include "smc/util/Binding.h"
 
 using namespace okapi;
+using std::cout;
+using std::endl;
+
+typedef okapi::ControllerButton Button;
+
+/* Begin forward declaration block */
+std::shared_ptr<okapi::AsyncMotionProfileController> robot::profile_controller;
+std::shared_ptr<okapi::ChassisController> robot::chassis;
+/* End forward declaration block */
 
 
 /**
@@ -28,10 +43,23 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-    pros::lcd::initialize();
-    pros::lcd::set_text(1, "Hello PROS User!");
+    robot::chassis =
+            ChassisControllerBuilder().withMotors(
+                            okapi::MotorGroup{robot::BACK_LEFT_DRIVE_MOTOR_PORT, robot::FRONT_LEFT_DRIVE_MOTOR_PORT},
+                            okapi::MotorGroup{robot::BACK_RIGHT_DRIVE_MOTOR_PORT, robot::FRONT_RIGHT_DRIVE_MOTOR_PORT})
+                    .withDimensions(AbstractMotor::gearset::green, ChassisScales{{4_in, 24_in}, okapi::imev5GreenTPR})
+                    .build();
 
-    pros::lcd::register_btn1_cb(on_center_button);
+    robot::profile_controller = okapi::AsyncMotionProfileControllerBuilder()
+            .withLimits({1.0, 0.5, 1.5})
+            .withOutput(robot::chassis)
+            .buildMotionProfileController();
+
+
+    robot::profile_controller->generatePath({
+                                                    {0_ft, 0_ft, 0_deg},
+                                                    {12_in, 12_in, 0_deg}},"A" // Profile name
+    );
 }
 
 /**
@@ -63,36 +91,16 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+
+
 void autonomous() {
-    Motor m1(LEFT_MOTOR_PORT);
-    Motor m2(RIGHT_MOTOR_PORT);
-    m1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    m2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+//    int timeout = 10;
+//    pros::Task myTask(intake_task_fn, (void*) &timeout, "My Task");kd
 
-    int timeout = 10;
-    pros::Task myTask(intake_task_fn, (void*) timeout, "My Task");
-
-    auto myChassis = ChassisControllerFactory::createPtr(
-            m1, // Left motors
-            m2,   // Right motors
-            AbstractMotor::gearset::green, // Torque gearset
-            {4_in, 12.5_in} // 4 inch wheels, 12.5 inch wheelbase width
-    );
-
-    auto profileController = AsyncControllerFactory::motionProfile(
-            1.0,  // Maximum linear velocity of the Chassis in m/s
-            0.5,  // Maximum linear acceleration of the Chassis in m/s/s
-            1.5, // Maximum linear jerk of the Chassis in m/s/s/s
-            *myChassis // Chassis Controller
-    );
-    profileController.generatePath({
-        Point{0_ft, 0_ft, 0_deg},
-        Point{49_in, -59_in, 90_deg}},
-                "A" // Profile name
-    );
-
-    profileController.setTarget("A");
-    profileController.waitUntilSettled();
+    robot::chassis->getModel()->setBrakeMode(constants::OKAPI_BRAKE);
+    robot::profile_controller->setTarget("A");
+    robot::profile_controller->waitUntilSettled();
+    robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
 
 /**
@@ -109,52 +117,71 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 
+void initBindings(std::vector<Binding *> & bind_list) {
+    // Intake hold binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::INTAKE_BUTTON), []() {
+        intake::setIntakeVelocity(100);
+    }, []() {
+        intake::setIntakeVelocity(0);
+    }, nullptr));
+
+    // Outtake hold binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::OUTTAKE_BUTTON), []() {
+        intake::setIntakeVelocity(-100);
+    }, []() {
+        intake::setIntakeVelocity(0);
+    }, nullptr));
+
+    // Arm position bindings
+    bind_list.emplace_back(new Binding(Button(bindings::INTAKE_POS_UP), []() {
+        intake::moveArmsToPosition(intake::IntakePosition::UP);
+    }, nullptr, nullptr));
+    bind_list.emplace_back(new Binding(Button(bindings::INTAKE_POS_DOWN), []() {
+        intake::moveArmsToPosition(intake::IntakePosition::DOWN);
+    }, nullptr, nullptr));
+
+    // Toggle tray binding
+    bind_list.emplace_back(new Binding(Button(bindings::TOGGLE_TRAY_POS), tray::togglePosition, nullptr, nullptr));
+
+    // TODO: Remove this before competition
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::Y), autonomous, nullptr, nullptr)); // Bind for auto test
+    // Note: Auto bind is blocking
+    /** End bind block **/
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
 void opcontrol() {
-    std::shared_ptr<ChassisControllerIntegrated> chassisPtr = ChassisControllerFactory::createPtr(LEFT_MOTOR_PORT, RIGHT_MOTOR_PORT);
-    pros::Motor intake_1(INTAKE_MOTOR_PORT_LEFT);
-    pros::Motor intake_2(INTAKE_MOTOR_PORT_RIGHT);
-    pros::Controller master(pros::E_CONTROLLER_MASTER);
+    okapi::Controller master(okapi::ControllerId::master);
+    intake::init();
+    tray::init();
 
-    double intakeVel = 0;
-    double rightX;
-    double rightY;
-    double leftX;
-    double leftY;
+    bool isBrake = false;
+    std::vector<Binding *> bind_list;
+    initBindings(bind_list);
+    // Have to do the drive-brake toggle here because it relies on variables local to main()
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::DRIVE_BRAKE_TOGGLE), nullptr,
+                                       [isBrake, master]() mutable {
+                                           isBrake = !isBrake;
+                                           robot::chassis->getModel()->setBrakeMode(isBrake ? constants::OKAPI_BRAKE : constants::OKAPI_COAST);
+                                           master.setText(0, 0, isBrake ? "Brake mode on " : "Brake mode off");
+                                       }, nullptr));
 
-#if (AUTO_DEBUG == 1)
-    bool should_continue = true;
-    while (should_continue) {
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A))
-            autonomous();
-        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B))
-            should_continue = false;
-    }
-#else
+
+    cout << "Initialization finished, entering drive loop" << endl;
     while (true) {
-        rightX = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0;
-        rightY = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) / 127.0;
-        leftX = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X) / 127.0;
-        leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0;
+        drive::opControl(master);
 
-        if (rightX != 0 || rightY != 0)
-            chassisPtr->arcade(rightY, rightX);
-        else {
-            chassisPtr->forward(leftY); /// TODO: Make this less sensitive (i.e. slower) than right stick analog
-            chassisPtr->right(leftX);
-        }
+        for (Binding * b : bind_list)
+            b->update();
+//        intake::printPos();
 
-        if (master.get_digital(INTAKE_BUTTON))
-            intakeVel = MOTOR_MOVE_MAX;
-        else if (master.get_digital(OUTTAKE_BUTTON))
-            intakeVel = -MOTOR_MOVE_MAX;
-        else
-            intakeVel = 0;
-
-        intake_1.move(intakeVel);
-        intake_2.move(intakeVel);
+        pros::delay(1);
     }
-#endif
+
+    for (Binding * b : bind_list)
+        delete b;
+
+    cout << "Exiting opcontrol()" << endl;
 }
 #pragma clang diagnostic pop
