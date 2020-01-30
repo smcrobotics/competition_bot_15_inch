@@ -4,6 +4,7 @@ project(competition_bot_15_inch)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
+include_directories(include/smc)
 include_directories(include/display)
 include_directories(include/display/lv_core)
 include_directories(include/display/lv_draw)
@@ -273,14 +274,17 @@ add_executable(competition_bot_15_inch
         include/pros/serial.hpp
         include/pros/vision.h
         include/pros/vision.hpp
-        include/subsystems/intake.h
-        include/subsystems/subsystems.h
-        include/subsystems/tray.h
+        include/smc/subsystems/claw.h
+        include/smc/subsystems/drive.h
+        include/smc/subsystems/lift.h
+        include/smc/util/Binding.h
+        include/smc/util/constants.h
+        include/smc/util/util.h
+        include/smc/robot.h
+        include/smc/tasks.h
         include/api.h
-        include/constants.h
         include/main.h
-        include/tasks.h
-        src/subsystems/intake.cpp
-        src/subsystems/tray.cpp
+        src/subsystems/lift.cpp
+        src/subsystems/claw.cpp
         src/main.cpp
         src/tasks.cpp)
