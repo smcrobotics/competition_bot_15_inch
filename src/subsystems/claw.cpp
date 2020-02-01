@@ -16,11 +16,15 @@ namespace claw {
 
     void setClawState(ClawState state) {
         if (state == ClawState::OPEN)
-            claw_motor->moveAbsolute(robot::CLAW_MOTOR_POS_OPEN, 120);
+            claw_motor->moveVoltage(12000);
         else
-            claw_motor->moveAbsolute(robot::CLAW_MOTOR_POS_CLOSED, 120);
+            claw_motor->moveVoltage(-12000);
 
         clawState = state;
+    }
+
+    void printPos() {
+        std::cout << claw_motor->getPosition() << std::endl;
     }
 
     void toggleClaw() {

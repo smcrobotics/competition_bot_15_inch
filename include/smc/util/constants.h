@@ -25,20 +25,20 @@ namespace robot {
     const char LIFT_POS_LIMIT_SWITCH_DOWN = 'A'; //TODO: Placeholder value
 
     const float LIFT_DOWN_POS = 0;
-    const float LIFT_UP_POS_LEFT = 1360.0;
-    const float LIFT_UP_POS_RIGHT = 1360.0;
-    const float LIFT_TOWER_LOW_POS_RIGHT = 100; //TODO: Placeholder value
-    const float LIFT_TOWER_LOW_POS_LEFT = 100; //TODO: Placeholder value
-    const float LIFT_TOWER_MID_POS_RIGHT = 500; //TODO: Placeholder value
-    const float LIFT_TOWER_MID_POS_LEFT = 500; //TODO: Placeholder value
-    const float LIFT_TOWER_HIGH_POS_RIGHT = 1360; //TODO: Placeholder value
-    const float LIFT_TOWER_HIGH_POS_LEFT = 1360; //TODO: Placeholder value
+    const float LIFT_UP_POS_LEFT = 1450.0;
+    const float LIFT_UP_POS_RIGHT = 1450.0;
+    const float LIFT_TOWER_LOW_POS_RIGHT = 1080; //TODO: Placeholder value
+    const float LIFT_TOWER_LOW_POS_LEFT = 1080; //TODO: Placeholder value
+    const float LIFT_TOWER_MID_POS_RIGHT = 1300; //TODO: Placeholder value
+    const float LIFT_TOWER_MID_POS_LEFT = 1300; //TODO: Placeholder value
+    const float LIFT_TOWER_HIGH_POS_RIGHT = 1450; //TODO: Placeholder value
+    const float LIFT_TOWER_HIGH_POS_LEFT = 1450; //TODO: Placeholder value
     /* End lift block */
 
 
     /* Begin claw block */
     const int CLAW_MOTOR_PORT = 15;
-    const int CLAW_MOTOR_POS_OPEN = 200; // TODO: Placeholder value
+    const int CLAW_MOTOR_POS_OPEN = 570; // TODO: Placeholder value
     const int CLAW_MOTOR_POS_CLOSED = 0;
     /* End claw block */
 
