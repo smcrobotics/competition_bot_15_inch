@@ -286,5 +286,7 @@ add_executable(competition_bot_15_inch
         include/main.h
         src/subsystems/lift.cpp
         src/subsystems/claw.cpp
+        src/subsystems/drive.cpp
         src/main.cpp
-        src/tasks.cpp)
+        src/tasks.cpp
+        src/Binding.cpp)

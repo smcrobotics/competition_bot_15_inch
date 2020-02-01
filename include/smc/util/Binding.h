@@ -13,7 +13,7 @@ typedef std::function<void (void)> CallbackFn;
 
 class Binding {
 public:
-    Binding(okapi::ControllerButton  button, CallbackFn onPress, CallbackFn onRelease, CallbackFn onPressedUpdate);
+    Binding(okapi::ControllerButton button, CallbackFn onPress, CallbackFn onRelease, CallbackFn onPressedUpdate);
 
     void update();
     void onUpdatePressed(CallbackFn & callback);

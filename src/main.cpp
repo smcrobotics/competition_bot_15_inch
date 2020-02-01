@@ -118,30 +118,49 @@ void autonomous() {
  */
 
 void initBindings(std::vector<Binding *> & bind_list) {
-    // Intake hold binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::INTAKE_BUTTON), []() {
-        intake::setIntakeVelocity(100);
-    }, []() {
-        intake::setIntakeVelocity(0);
-    }, nullptr));
-
-    // Outtake hold binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::OUTTAKE_BUTTON), []() {
-        intake::setIntakeVelocity(-100);
-    }, []() {
-        intake::setIntakeVelocity(0);
-    }, nullptr));
-
-    // Arm position bindings
-    bind_list.emplace_back(new Binding(Button(bindings::INTAKE_POS_UP), []() {
-        intake::moveArmsToPosition(intake::IntakePosition::UP);
-    }, nullptr, nullptr));
-    bind_list.emplace_back(new Binding(Button(bindings::INTAKE_POS_DOWN), []() {
-        intake::moveArmsToPosition(intake::IntakePosition::DOWN);
+    // Claw binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::TOGGLE_CLAW), []() {
+        claw::toggleClaw();
     }, nullptr, nullptr));
 
-    // Toggle tray binding
-    bind_list.emplace_back(new Binding(Button(bindings::TOGGLE_TRAY_POS), tray::togglePosition, nullptr, nullptr));
+    // Lift Position Up binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_UP), []() {
+        lift::moveToPosition(lift::UP);
+    }, nullptr, nullptr));
+
+    // Lift Position Down binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_DOWN), []() {
+        lift::moveToPosition(lift::DOWN);
+    }, nullptr, nullptr));
+
+    // Lift Position Tower Low binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_LOW), []() {
+        lift::moveToPosition(lift::TOWER_LOW);
+    }, nullptr, nullptr));
+
+    // Lift Position Tower Mid binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_MID), []() {
+        lift::moveToPosition(lift::TOWER_MID);
+    }, nullptr, nullptr));
+
+    // Lift Position Tower High binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_HIGH), []() {
+        lift::moveToPosition(lift::TOWER_HIGH);
+    }, nullptr, nullptr));
+
+    // Lift Move Up binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_UP), []() {
+        lift::move(100);
+    }, []() {
+        lift::move(0);
+    }, nullptr));
+
+    // Lift Move Down binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_DOWN), []() {
+        lift::move(-100);
+    }, []() {
+        lift::move(0);
+    }, nullptr));
 
     // TODO: Remove this before competition
     bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::Y), autonomous, nullptr, nullptr)); // Bind for auto test
@@ -153,8 +172,8 @@ void initBindings(std::vector<Binding *> & bind_list) {
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
 void opcontrol() {
     okapi::Controller master(okapi::ControllerId::master);
-    intake::init();
-    tray::init();
+    claw::init();
+    lift::init();
 
     bool isBrake = false;
     std::vector<Binding *> bind_list;

@@ -27,6 +27,12 @@ namespace robot {
     const float LIFT_DOWN_POS = 0;
     const float LIFT_UP_POS_LEFT = 910.0;
     const float LIFT_UP_POS_RIGHT = 910.0;
+    const float LIFT_TOWER_LOW_POS_RIGHT = 100; //TODO: Placeholder value
+    const float LIFT_TOWER_LOW_POS_LEFT = 100; //TODO: Placeholder value
+    const float LIFT_TOWER_MID_POS_RIGHT = 500; //TODO: Placeholder value
+    const float LIFT_TOWER_MID_POS_LEFT = 500; //TODO: Placeholder value
+    const float LIFT_TOWER_HIGH_POS_RIGHT = 800; //TODO: Placeholder value
+    const float LIFT_TOWER_HIGH_POS_LEFT = 800; //TODO: Placeholder value
     /* End lift block */
 
 
@@ -44,12 +50,13 @@ namespace robot {
 }
 
 namespace bindings {
-    const auto LIFT_BUTTON  = okapi::ControllerDigital::R1; // TODO: Placeholder value
-    const auto OUTTAKE_BUTTON = okapi::ControllerDigital::L1;
-
-    const auto TOGGLE_LIFT_POS = okapi::ControllerDigital::B;
     const auto LIFT_POS_UP = okapi::ControllerDigital::up;
     const auto LIFT_POS_DOWN = okapi::ControllerDigital::left;
+    const auto LIFT_POS_TOWER_LOW = okapi::ControllerDigital::R1; // TODO: Placeholder value
+    const auto LIFT_POS_TOWER_MID = okapi::ControllerDigital::R1; // TODO: Placeholder value
+    const auto LIFT_POS_TOWER_HIGH = okapi::ControllerDigital::R1; // TODO: Placeholder value
+    const auto LIFT_MOVE_UP = okapi::ControllerDigital::R1; // TODO: Placeholder value
+    const auto LIFT_MOVE_DOWN = okapi::ControllerDigital::R1; // TODO: Placeholder value
 
     const auto TOGGLE_CLAW = okapi::ControllerDigital::A;
 
