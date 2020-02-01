@@ -281,12 +281,10 @@ add_executable(competition_bot_15_inch
         include/smc/util/constants.h
         include/smc/util/util.h
         include/smc/robot.h
-        include/smc/tasks.h
         include/api.h
         include/main.h
         src/subsystems/lift.cpp
         src/subsystems/claw.cpp
         src/subsystems/drive.cpp
         src/main.cpp
-        src/tasks.cpp
-        src/Binding.cpp)
+        src/util/Binding.cpp)

@@ -12,6 +12,8 @@ namespace claw {
         clawState = ClawState::CLOSED;
     }
 
+    void update() {}
+
     void setClawState(ClawState state) {
         if (state == ClawState::OPEN)
             claw_motor->moveAbsolute(robot::CLAW_MOTOR_POS_OPEN, 120);

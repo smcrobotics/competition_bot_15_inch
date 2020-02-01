@@ -9,8 +9,8 @@
 #include "okapi/api.hpp"
 
 namespace lift {
-    const std::int32_t UP_VELOCITY = 120;
-    const std::int32_t DOWN_VELOCITY = 80;
+    const std::int32_t UP_VELOCITY = 20;
+    const std::int32_t DOWN_VELOCITY = 30;
 
     enum LiftPosition { UP, DOWN, TOWER_LOW, TOWER_MID, TOWER_HIGH };
 

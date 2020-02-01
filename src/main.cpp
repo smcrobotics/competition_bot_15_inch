@@ -5,7 +5,6 @@
 #include "main.h"
 
 #include "smc/robot.h"
-#include "smc/tasks.h"
 #include "smc/util/Binding.h"
 
 using namespace okapi;
@@ -45,9 +44,9 @@ void on_center_button() {
 void initialize() {
     robot::chassis =
             ChassisControllerBuilder().withMotors(
-                            okapi::MotorGroup{robot::BACK_LEFT_DRIVE_MOTOR_PORT, robot::FRONT_LEFT_DRIVE_MOTOR_PORT},
-                            okapi::MotorGroup{robot::BACK_RIGHT_DRIVE_MOTOR_PORT, robot::FRONT_RIGHT_DRIVE_MOTOR_PORT})
-                    .withDimensions(AbstractMotor::gearset::green, ChassisScales{{4_in, 24_in}, okapi::imev5GreenTPR})
+                            okapi::MotorGroup{robot::FRONT_LEFT_DRIVE_MOTOR_PORT, robot::BACK_LEFT_DRIVE_MOTOR_PORT},
+                            okapi::MotorGroup{robot::FRONT_RIGHT_DRIVE_MOTOR_PORT, robot::BACK_RIGHT_DRIVE_MOTOR_PORT})
+                    .withDimensions(AbstractMotor::gearset::green, ChassisScales{{4_in, 12.5_in}, okapi::imev5GreenTPR})
                     .build();
 
     robot::profile_controller = okapi::AsyncMotionProfileControllerBuilder()
@@ -119,9 +118,7 @@ void autonomous() {
 
 void initBindings(std::vector<Binding *> & bind_list) {
     // Claw binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::TOGGLE_CLAW), []() {
-        claw::toggleClaw();
-    }, nullptr, nullptr));
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::TOGGLE_CLAW), claw::toggleClaw, nullptr, nullptr));
 
     // Lift Position Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_UP), []() {
@@ -150,20 +147,20 @@ void initBindings(std::vector<Binding *> & bind_list) {
 
     // Lift Move Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_UP), []() {
-        lift::move(100);
+        lift::move(7);
     }, []() {
         lift::move(0);
     }, nullptr));
 
     // Lift Move Down binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_DOWN), []() {
-        lift::move(-100);
+        lift::move(-7);
     }, []() {
         lift::move(0);
     }, nullptr));
 
     // TODO: Remove this before competition
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::Y), autonomous, nullptr, nullptr)); // Bind for auto test
+//    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::Y), autonomous, nullptr, nullptr)); // Bind for auto test
     // Note: Auto bind is blocking
     /** End bind block **/
 }
@@ -190,10 +187,12 @@ void opcontrol() {
     cout << "Initialization finished, entering drive loop" << endl;
     while (true) {
         drive::opControl(master);
+        lift::printPos();
 
+        lift::update();
+        claw::update();
         for (Binding * b : bind_list)
             b->update();
-//        intake::printPos();
 
         pros::delay(1);
     }

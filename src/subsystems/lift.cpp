@@ -6,6 +6,9 @@
 #include "smc/util/util.h"
 #include "smc/subsystems/lift.h"
 
+using std::cout;
+using std::endl;
+
 namespace lift {
     std::unique_ptr<okapi::Motor> left_lift_motor;
     std::unique_ptr<okapi::Motor> right_lift_motor;
@@ -60,6 +63,11 @@ namespace lift {
                 right_lift_motor->moveAbsolute(robot::LIFT_TOWER_HIGH_POS_RIGHT, velocity);
                 break;
         }
+    }
+
+    void printPos() {
+        cout << "Left: " << left_lift_motor->getPosition() << endl;
+        cout << "Right: " << right_lift_motor->getPosition() << endl;
     }
 
     void move(std::int32_t velocity) {
