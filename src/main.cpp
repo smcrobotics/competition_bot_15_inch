@@ -60,8 +60,8 @@ void initialize() {
 
     robot::profile_controller->generatePath({
                                                     {0_in, 0_in, 0_deg},
-                                                    {5_ft, 0_in, 0_deg},
-                                                    {-3_ft, 0_in, 0_deg}}, "A" // Profile name
+                                                    {1_ft, 0_ft, 0_deg},
+                                                    {0_ft, 1_ft, 90_deg}}, "A" // Profile name
     );
 }
 
@@ -101,13 +101,9 @@ void autonomous() {
     robot::profile_controller->setTarget("A");
     robot::profile_controller->waitUntilSettled();
 
-    robot::chassis->getModel()->tank(-500, -500);
-    pros::delay(3500);
-    robot::chassis->getModel()->tank(0, 0);
-
-
     robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -122,7 +118,6 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
 void initBindings(std::vector<Binding *> & bind_list) {
     // Claw binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::TOGGLE_CLAW), claw::toggleClaw, nullptr, nullptr));
@@ -167,7 +162,7 @@ void initBindings(std::vector<Binding *> & bind_list) {
     }, nullptr));
 
     // TODO: Remove this before competition
-//    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
     // Note: Au`to bind is blocking
     /** End bind block **/
 }
@@ -193,7 +188,6 @@ void opcontrol() {
     while (true) {
         drive::opControl(master);
         lift::printPos();
-        claw::printPos();
 
         lift::update();
         claw::update();
