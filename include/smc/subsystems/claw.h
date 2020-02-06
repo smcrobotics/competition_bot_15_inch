@@ -14,7 +14,7 @@ namespace claw {
     void init();
     void update();
 
-    void setClaw(ClawState state);
+    void setClawState(ClawState state);
     void toggleClaw();
     void printPos();
 

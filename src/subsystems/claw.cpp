@@ -10,6 +10,8 @@ namespace claw {
         claw_motor = util::initMotor(robot::CLAW_MOTOR_PORT);
         claw_motor->tarePosition();
         clawState = ClawState::CLOSED;
+        // always start closed
+        claw_motor->moveVoltage(-12000);
     }
 
     void update() {}

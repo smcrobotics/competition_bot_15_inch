@@ -46,12 +46,13 @@ void initialize() {
             ChassisControllerBuilder().withMotors(
                             okapi::MotorGroup{robot::FRONT_LEFT_DRIVE_MOTOR_PORT, robot::BACK_LEFT_DRIVE_MOTOR_PORT},
                             okapi::MotorGroup{robot::FRONT_RIGHT_DRIVE_MOTOR_PORT, robot::BACK_RIGHT_DRIVE_MOTOR_PORT})
-                    .withDimensions(AbstractMotor::gearset::green, ChassisScales{{4_in, 13.5_in}, okapi::imev5GreenTPR})
+                    .withDimensions(AbstractMotor::gearset::green, ChassisScales({4_in, 12.5_in}, okapi::imev5GreenTPR))
                     .build();
 
     lift::init();
     claw::init();
 
+    // limits: velocity, acceleration, jerk
     robot::profile_controller = okapi::AsyncMotionProfileControllerBuilder()
             .withLimits({0.1, 0.1, 0.1})
             .withOutput(robot::chassis)
@@ -59,9 +60,23 @@ void initialize() {
 
 
     robot::profile_controller->generatePath({
+                                                    {10_in, 0_in, 90_deg},
+                                                    {0_in, 10_in, 180_deg},
+                                                    {-10_in, 0_in, 270_deg},
+                                                    {0_in, -10_in, 0_deg},
+                                                    {10_in, 0_in, 90_deg}}, "circle" // Profile name
+    );
+
+    robot::profile_controller->generatePath({
                                                     {0_in, 0_in, 0_deg},
-                                                    {1_ft, 0_ft, 0_deg},
-                                                    {1.1_ft, 1_ft, 90_deg}}, "A" // Profile name
+                                                    {1_ft, 0_in, 0_deg}}, "forward" // Profile name
+    );
+
+    robot::profile_controller->generatePath({
+                                                    {0_in, 0_in, 0_deg},
+                                                    {1_ft, 0_in, 0_deg},
+                                                    {2_ft, 1_ft, 90_deg},
+                                                    {3_ft, 2_ft, 0_deg}}, "path" // Profile name
     );
 }
 
@@ -97,9 +112,30 @@ void competition_initialize() {}
 
 
 void autonomous() {
-    robot::chassis->getModel()->setBrakeMode(constants::OKAPI_BRAKE);
-    robot::profile_controller->setTarget("A");
+    /**
+    sample routine 1: pick up cube and place it in a tower
+    **/
+    robot::chassis->getModel()->setBrakeMode(constants::OKAPI_BRAKE);    
+
+    claw::setClawState(claw::ClawState::OPEN);
+
+    robot::profile_controller->setTarget("forward");
     robot::profile_controller->waitUntilSettled();
+
+    claw::setClawState(claw::ClawState::CLOSED);
+
+    robot::profile_controller->setTarget("path");
+    robot::profile_controller->waitUntilSettled();
+
+    lift::moveToPosition(lift::TOWER_LOW);
+    // TODO: find a way to not do anything until we reach the position
+    pros::delay(3000);
+    claw::setClawState(claw::ClawState::OPEN);
+    pros::delay(1000);
+    lift::moveToPosition(lift::DOWN);
+    /**
+    end sample routine
+    **/
 
     robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
