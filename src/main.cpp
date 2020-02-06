@@ -46,14 +46,14 @@ void initialize() {
             ChassisControllerBuilder().withMotors(
                             okapi::MotorGroup{robot::FRONT_LEFT_DRIVE_MOTOR_PORT, robot::BACK_LEFT_DRIVE_MOTOR_PORT},
                             okapi::MotorGroup{robot::FRONT_RIGHT_DRIVE_MOTOR_PORT, robot::BACK_RIGHT_DRIVE_MOTOR_PORT})
-                    .withDimensions(AbstractMotor::gearset::green, ChassisScales{{4_in, 12.5_in}, okapi::imev5GreenTPR})
+                    .withDimensions(AbstractMotor::gearset::green, ChassisScales{{4_in, 13.5_in}, okapi::imev5GreenTPR})
                     .build();
 
     lift::init();
     claw::init();
 
     robot::profile_controller = okapi::AsyncMotionProfileControllerBuilder()
-            .withLimits({1.0, 0.5, 1.5})
+            .withLimits({0.1, 0.1, 0.1})
             .withOutput(robot::chassis)
             .buildMotionProfileController();
 
@@ -61,7 +61,7 @@ void initialize() {
     robot::profile_controller->generatePath({
                                                     {0_in, 0_in, 0_deg},
                                                     {1_ft, 0_ft, 0_deg},
-                                                    {0_ft, 1_ft, 90_deg}}, "A" // Profile name
+                                                    {1.1_ft, 1_ft, 90_deg}}, "A" // Profile name
     );
 }
 
