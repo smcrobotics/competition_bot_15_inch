@@ -1,13 +1,13 @@
 import os
 
-os.system("rm -rf ./15in_key_bindings.md")
-os.system("touch ./15in_key_bindings.md")
+os.system("rm -rf ./docs/15in_key_bindings.md")
+os.system("touch ./docs/15in_key_bindings.md")
 source = open("./include/smc/util/constants.h")
 
 
-arrows = ["up", "down", "left", "right"]
-bumpers = ["L1", "L2", "R1", "R2"]
-letters = ["X", "B", "Y", "A"]
+arrows = ["down", "left", "up", "right"]
+bumpers = ["R1", "L1", "R2", "L2"]
+letters = ["Y", "X", "A", "B"]
 
 bindings = {}
 
@@ -15,6 +15,8 @@ for line in source.readlines():
     if "ControllerDigital" in line:
         line = line.strip().replace("const auto ", "").split(" = okapi::ControllerDigital::", 1)
         command = line[0]
+        command_list = command.split("_")
+        command = " ".join(command_list)
         button = line[1].split(";", 1)[0]
         bindings[button] = command
         # print(command)
@@ -23,12 +25,14 @@ for line in source.readlines():
 
 source.close()
 
-with open('./15in_key_bindings.md', 'a') as output_file:
+with open('./docs/15in_key_bindings.md', 'a') as output_file:
     output_file.write("# Key bindings for SMC 2019-2020 15in robot\n")
-    output_file.write("## Buttons\n")
-    output_file.write("### Bumpers\n")
-    for button in bumpers:
-        output_file.write("- {}: ".format(button))
+    output_file.write("![Controller](https://raw.githubusercontent.com/smcrobotics/competition_bot_15_inch/master/docs/controller.JPG)\n")
+    i = 1
+    output_file.write("## Arrows\n")
+    for button in arrows:
+        output_file.write("{}. {}: ".format(str(i), button))
+        i += 1
         if button in bindings:
             output_file.write("{}".format(bindings[button]))
         else:
@@ -36,9 +40,10 @@ with open('./15in_key_bindings.md', 'a') as output_file:
         output_file.write("\n")
 
     output_file.write("\n")
-    output_file.write("### Arrows\n")
-    for button in arrows:
-        output_file.write("- {}: ".format(button))
+    output_file.write("## Letters\n")
+    for button in letters:
+        output_file.write("{}. {}: ".format(str(i), button))
+        i += 1
         if button in bindings:
             output_file.write("{}".format(bindings[button]))
         else:
@@ -46,9 +51,10 @@ with open('./15in_key_bindings.md', 'a') as output_file:
         output_file.write("\n")
     
     output_file.write("\n")
-    output_file.write("### Letters\n")
-    for button in letters:
-        output_file.write("- {}: ".format(button))
+    output_file.write("## Bumpers\n")
+    for button in bumpers:
+        output_file.write("{}. {}: ".format(str(i), button))
+        i += 1
         if button in bindings:
             output_file.write("{}".format(bindings[button]))
         else:
