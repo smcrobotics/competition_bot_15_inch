@@ -28,35 +28,14 @@ source.close()
 with open('./docs/15in_key_bindings.md', 'a') as output_file:
     output_file.write("# Key bindings for SMC 2019-2020 15in robot\n")
     output_file.write("![Controller](https://raw.githubusercontent.com/smcrobotics/competition_bot_15_inch/master/docs/controller.JPG)\n")
-    i = 1
-    output_file.write("## Arrows\n")
-    for button in arrows:
-        output_file.write("{}. {}: ".format(str(i), button))
-        i += 1
-        if button in bindings:
-            output_file.write("{}".format(bindings[button]))
-        else:
-            output_file.write("N/A")
-        output_file.write("\n")
-
-    output_file.write("\n")
-    output_file.write("## Letters\n")
-    for button in letters:
-        output_file.write("{}. {}: ".format(str(i), button))
-        i += 1
-        if button in bindings:
-            output_file.write("{}".format(bindings[button]))
-        else:
-            output_file.write("N/A")
-        output_file.write("\n")
-    
-    output_file.write("\n")
-    output_file.write("## Bumpers\n")
-    for button in bumpers:
-        output_file.write("{}. {}: ".format(str(i), button))
-        i += 1
-        if button in bindings:
-            output_file.write("{}".format(bindings[button]))
-        else:
-            output_file.write("N/A")
+    output_file.write("\nDirection Arrows | Letters          | Bumpers    |\n")
+    output_file.write("---------------- | ---------------- | ---------- |\n")
+    for i in range(4):
+        j = i + 1
+        arrow = bindings[arrows[i]] if arrows[i] in bindings else "N/A"
+        output_file.write("{}. {} | ".format(str(j), arrow))
+        bumper = bindings[bumpers[i]] if bumpers[i] in bindings else "N/A"
+        output_file.write("{}. {} | ".format(str(j+4), bumper))
+        letter = bindings[letters[i]] if letters[i] in bindings else "N/A"
+        output_file.write("{}. {} | ".format(str(j+8), letter))
         output_file.write("\n")
