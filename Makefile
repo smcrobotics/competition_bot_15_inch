@@ -1,5 +1,10 @@
 ################################################################################
 ######################### User configurable parameters #########################
+
+# Include builddocs target
+builddocs: include/smc/util/constants.h
+	python parse_key_bindings_15in.py
+
 # filename extensions
 CEXTS:=c
 ASMEXTS:=s S
