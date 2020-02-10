@@ -50,6 +50,7 @@ namespace robot {
 }
 
 namespace bindings {
+    // TODO: when all buttons have been mapped, make a comment describing what each one does
     const auto LIFT_POS_UP = okapi::ControllerDigital::up;
     const auto LIFT_POS_DOWN = okapi::ControllerDigital::down;
     const auto LIFT_POS_TOWER_LOW = okapi::ControllerDigital::Y; // TODO: Placeholder value
