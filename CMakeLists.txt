@@ -287,4 +287,4 @@ add_executable(competition_bot_15_inch
         src/subsystems/claw.cpp
         src/subsystems/drive.cpp
         src/main.cpp
-        src/util/Binding.cpp)
+        src/util/Binding.cpp include/smc/subsystems/sideIndicate.h src/subsystems/sideIndicate.cpp)

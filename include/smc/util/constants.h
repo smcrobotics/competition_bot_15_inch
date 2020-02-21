@@ -42,6 +42,9 @@ namespace robot {
     const int CLAW_MOTOR_POS_CLOSED = 0;
     /* End claw block */
 
+    /*Begin sideIndicate*/
+    const int SIDE_INDICATE_LIMIT_SWITCH_PORT = 'B'; //TODO: Placeholder value
+    /*End sideIndicate*/
 
     /* Begin random global pointer block */
     extern std::shared_ptr<okapi::ChassisController> chassis;

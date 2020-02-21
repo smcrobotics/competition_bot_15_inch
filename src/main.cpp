@@ -51,6 +51,7 @@ void initialize() {
 
     lift::init();
     claw::init();
+    sideIndicate::init();
 
     // limits: velocity, acceleration, jerk
     robot::profile_controller = okapi::AsyncMotionProfileControllerBuilder()
@@ -78,6 +79,17 @@ void initialize() {
                                                     {2_ft, 1_ft, 90_deg},
                                                     {3_ft, 2_ft, 0_deg}}, "path" // Profile name
     );
+
+    bool starts_on_red_side = sideIndicate::getSide();
+    // if (starts_on_red_side) {
+    //     robot::profile_controller->generatePath({
+    //         {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for red
+    //     );
+    // } else {
+    //     robot::profile_controller->generatePath({
+    //         {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for blue
+    //     );
+    // }
 }
 
 /**
