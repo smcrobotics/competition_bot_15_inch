@@ -65,6 +65,11 @@ namespace lift {
         }
     }
 
+    void waitUntilSettled() {
+        while (!(left_lift_motor->isStopped() && right_lift_motor->isStopped()))
+            pros::delay(10);
+    }
+
     void printPos() {
         cout << "Left: " << left_lift_motor->getPosition() << endl;
         cout << "Right: " << right_lift_motor->getPosition() << endl;

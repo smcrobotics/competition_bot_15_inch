@@ -20,6 +20,7 @@ namespace lift {
     void printPos();
 
     void moveToPosition(LiftPosition position);
+    void waitUntilSettled();
     void move(std::int32_t velocity);
 
     extern std::unique_ptr<okapi::Motor> left_lift_motor;
