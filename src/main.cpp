@@ -70,7 +70,7 @@ void initialize() {
 
     robot::profile_controller->generatePath({
                                                     {0_in, 0_in, 0_deg},
-                                                    {1_ft, 0_in, 0_deg}}, "forward" // Profile name
+                                                    {1.3_ft, 0_in, 0_deg}}, "forward" // Profile name
     );
 
     robot::profile_controller->generatePath({
@@ -136,13 +136,18 @@ void autonomous() {
 
     claw::setClawState(claw::ClawState::CLOSED);
 
-    robot::profile_controller->setTarget("path");
+    robot::profile_controller->setTarget("forward", true);
+//    robot::profile_controller->setTarget("path");
     robot::profile_controller->waitUntilSettled();
 
     lift::moveToPosition(lift::TOWER_LOW);
     // TODO: find a way to not do anything until we reach the position
     pros::delay(3000);
+    robot::profile_controller->setTarget("forward");
+    pros::delay(3000);
     claw::setClawState(claw::ClawState::OPEN);
+    pros::delay(1000);
+    robot::profile_controller->setTarget("forward", true);
     pros::delay(1000);
     lift::moveToPosition(lift::DOWN);
     /**
