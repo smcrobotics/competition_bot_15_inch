@@ -215,7 +215,7 @@ void initBindings(std::vector<Binding *> & bind_list) {
     }, nullptr));
 
     // TODO: Remove this before competition
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
+//    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
     // Note: Au`to bind is blocking
     /** End bind block **/
 }
