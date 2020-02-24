@@ -61,7 +61,7 @@ void initialize() {
 
     robot::profile_controller->generatePath({
                                                     {89_cm, 0_cm, 0_deg},
-                                                    {0_in, 0_in, 0_deg}}, "forward" // Profile name
+                                                    {0_in, 0_in, 0_deg}}, "forward"
     );
 
     robot::profile_controller->generatePath({{89_cm, 0_in, 0_deg},
@@ -126,9 +126,9 @@ void autonomous() {
     robot::profile_controller->waitUntilSettled();
 
     lift::moveToPosition(lift::TOWER_LOW);
-    pros::delay(3000);
+    pros::delay(1000);
     lift::moveToPosition(lift::DOWN);
-    pros::delay(3000);
+    pros::delay(1000);
     claw::setClawState(claw::OPEN);
 
     robot::profile_controller->setTarget("toCube");
