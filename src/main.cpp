@@ -71,16 +71,16 @@ void initialize() {
     robot::profile_controller->generatePath({{67_cm, 85_cm, -90_deg},
                                              {4_cm, 91.5_cm, 0_deg}}, "toTower");
 
-//    bool starts_on_red_side = sideIndicate::getSide();
-//     if (starts_on_red_side) {
-//         robot::profile_controller->generatePath({
-//             {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for red
-//         );
-//     } else {
-//         robot::profile_controller->generatePath({
-//             {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for blue
-//         );
-//     }
+   // bool starts_on_red_side = sideIndicate::getSide();
+   //  if (starts_on_red_side) {
+   //      robot::profile_controller->generatePath({
+   //          {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for red
+   //      );
+   //  } else {
+   //      robot::profile_controller->generatePath({
+   //          {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for blue
+   //      );
+   //  }
 }
 
 /**
@@ -122,25 +122,29 @@ void autonomous() {
 
     robot::profile_controller->setTarget("forward");
     robot::profile_controller->waitUntilSettled();
-    robot::profile_controller->setTarget("forward", true);
+    robot::profile_controller->setTarget("forward", true); // reverse back to initial position
     robot::profile_controller->waitUntilSettled();
 
+    // drop claw
     lift::moveToPosition(lift::TOWER_LOW);
-    pros::delay(3000);
+    pros::delay(1000);
     lift::moveToPosition(lift::DOWN);
-    pros::delay(3000);
+    pros::delay(1000);
     claw::setClawState(claw::OPEN);
+    // claw dropped
 
-    robot::profile_controller->setTarget("toCube");
+    bool starts_on_red_side = false; // if we start on red side, mirror the path
+    robot::profile_controller->setTarget("toCube", false, starts_on_red_side);
     robot::profile_controller->waitUntilSettled();
     claw::setClawState(claw::CLOSED);
 
-    robot::profile_controller->setTarget("toTower");
+    // end push cube in
+
+    robot::profile_controller->setTarget("toTower", false, starts_on_red_side);
     lift::moveToPosition(lift::TOWER_MID);
     robot::profile_controller->waitUntilSettled();
     claw::setClawState(claw::OPEN);
-
-
+    
     robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
 
