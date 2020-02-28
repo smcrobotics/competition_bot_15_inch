@@ -13,8 +13,7 @@ namespace claw {
         pros::delay(500);
         claw_motor->moveVoltage(0);
         claw_motor->tarePosition();
-        clawState = ClawState::OPEN;
-        claw_motor->moveAbsolute(600, 200);
+        clawState = ClawState::CLOSED;
     }
 
     void update() {}
@@ -25,7 +24,7 @@ namespace claw {
             claw_motor->moveAbsolute(600, 200);
         else
             // claw_motor->moveVoltage(-12000);
-            claw_motor->moveAbsolute(450, 200);
+            claw_motor->moveAbsolute(0, 200);
 
         clawState = state;
     }
