@@ -18,20 +18,26 @@ namespace lift {
     void init() {
         left_lift_motor = util::initMotor(robot::LIFT_MOTOR_PORT_LEFT);
         right_lift_motor = util::initMotor(robot::LIFT_MOTOR_PORT_RIGHT);
-        top_lift_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
-        bottom_lift_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
+        // top_lift_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
+        bottom_lift_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
 
         left_lift_motor->tarePosition();
         right_lift_motor->tarePosition();
     }
 
     void update() {
-        if (top_lift_limit_switch->isPressed()) {
-            move(0);
-        } else if (bottom_lift_limit_switch->isPressed()) {
-            move(0);
-            left_lift_motor->tarePosition();
-            right_lift_motor->tarePosition();
+        // if (top_lift_limit_switch->isPressed()) {
+        //     std::cout << "top limit switch pressed" << std::endl;
+        //     move(0);
+        // } else
+        // std::cout << "update lift" << std::endl;
+        if (bottom_lift_limit_switch->isPressed()) {
+            std::cout << "bottom limit switch pressed" << std::endl;
+            if (left_lift_motor->getActualVelocity() < 0 && right_lift_motor->getActualVelocity() < 0) {
+                move(0);
+                left_lift_motor->tarePosition();
+                right_lift_motor->tarePosition();
+            }
         }
     }
 
@@ -76,7 +82,9 @@ namespace lift {
     }
 
     void move(std::int32_t velocity) {
-        left_lift_motor->moveVelocity(velocity);
-        right_lift_motor->moveVelocity(velocity);
+        if (!bottom_lift_limit_switch->isPressed() || velocity > 0) {
+            left_lift_motor->moveVelocity(velocity);
+            right_lift_motor->moveVelocity(velocity);
+        }
     }
 }
