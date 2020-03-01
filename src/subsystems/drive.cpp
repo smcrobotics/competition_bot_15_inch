@@ -26,6 +26,6 @@ namespace drive {
         double leftX = pow(abs(leftAnalogX), 2) * leftAnalogX / abs(leftAnalogX);
         double leftY = pow(abs(leftAnalogY), 2) * leftAnalogY / abs(leftAnalogY);
 
-        robot::chassis->getModel()->tank(leftY, rightY);
+        robot::chassis->getModel()->tank(leftY, rightY); //TODO: there might be PID going on under the hood?
     }
 }

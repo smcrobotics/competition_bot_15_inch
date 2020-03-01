@@ -31,8 +31,8 @@ namespace robot {
     const float LIFT_TOWER_LOW_POS_LEFT = 1080; //TODO: Placeholder value
     const float LIFT_TOWER_MID_POS_RIGHT = 1300; //TODO: Placeholder value
     const float LIFT_TOWER_MID_POS_LEFT = 1300; //TODO: Placeholder value
-    const float LIFT_TOWER_HIGH_POS_RIGHT = 1450; //TODO: Placeholder value
-    const float LIFT_TOWER_HIGH_POS_LEFT = 1450; //TODO: Placeholder value
+    // const float LIFT_TOWER_HIGH_POS_RIGHT = 1450; //TODO: Placeholder value
+    // const float LIFT_TOWER_HIGH_POS_LEFT = 1450; //TODO: Placeholder value
     /* End lift block */
 
 
@@ -71,6 +71,9 @@ namespace bindings {
 
 namespace constants {
     const int MOTOR_MOVE_MAX = 127;
+
+    const std::int32_t LIFT_UP_VELOCITY = 50;
+    const std::int32_t LIFT_DOWN_VELOCITY = 50;
 
     const auto OKAPI_BRAKE = okapi::AbstractMotor::brakeMode::brake;
     const auto OKAPI_COAST = okapi::AbstractMotor::brakeMode::coast;
