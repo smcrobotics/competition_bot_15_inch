@@ -25,8 +25,9 @@ std::shared_ptr<okapi::ChassisController> robot::chassis;
  * When this callback is fired, it will toggle line 2 of the LCD text between
  * "I was pressed!" and nothing.
  */
+static bool pressed = false;
 void on_center_button() {
-    static bool pressed = false;
+    cout << "Center button dum dum" << endl;
     pressed = !pressed;
     if (pressed) {
         pros::lcd::set_text(2, "I was pressed!");
@@ -42,6 +43,7 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+    pros::lcd::initialize();
     robot::chassis =
             ChassisControllerBuilder().withMotors(
                             okapi::MotorGroup{robot::FRONT_LEFT_DRIVE_MOTOR_PORT, robot::BACK_LEFT_DRIVE_MOTOR_PORT},

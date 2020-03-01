@@ -64,7 +64,7 @@ namespace bindings {
 
     const auto TOGGLE_CLAW = okapi::ControllerDigital::right;
 
-    const auto DRIVE_BRAKE_TOGGLE = okapi::ControllerDigital::left;
+    const auto DRIVE_BRAKE_TOGGLE = okapi::ControllerDigital::X;
 }
 
 namespace constants {
