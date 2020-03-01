@@ -11,7 +11,7 @@
 #ifndef _ROBOT_H
 #define _ROBOT_H
 
-#include "smc/subsystems/lift.h"
+#include "smc/subsystems/Lift.h"
 #include "smc/subsystems/claw.h"
 #include "subsystems/drive.h"
 #include "subsystems/sideIndicate.h"

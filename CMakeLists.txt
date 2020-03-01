@@ -276,14 +276,14 @@ add_executable(competition_bot_15_inch
         include/pros/vision.hpp
         include/smc/subsystems/claw.h
         include/smc/subsystems/drive.h
-        include/smc/subsystems/lift.h
+        include/smc/subsystems/Lift.h
         include/smc/util/Binding.h
         include/smc/util/constants.h
         include/smc/util/util.h
         include/smc/robot.h
         include/api.h
         include/main.h
-        src/subsystems/lift.cpp
+        src/subsystems/Lift.cpp
         src/subsystems/claw.cpp
         src/subsystems/drive.cpp
         src/main.cpp
