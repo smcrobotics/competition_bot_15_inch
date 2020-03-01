@@ -5,6 +5,7 @@
 #include "main.h"
 
 #include "smc/robot.h"
+#include "smc/subsystems/Lift.h"
 #include "smc/util/Binding.h"
 
 using namespace okapi;
@@ -51,7 +52,7 @@ void initialize() {
                     .withDimensions(AbstractMotor::gearset::green, ChassisScales({4_in, 12.5_in}, okapi::imev5GreenTPR))
                     .build();
 
-    lift::init();
+    subsystems::Lift::getInstance();
     claw::init();
     sideIndicate::init();
 
@@ -128,9 +129,9 @@ void autonomous() {
     robot::profile_controller->waitUntilSettled();
 
     // drop claw
-    lift::moveToPosition(lift::TOWER_LOW);
+    subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_LOW);
     pros::delay(1000);
-    lift::moveToPosition(lift::DOWN);
+    subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::DOWN);
     pros::delay(1000);
     claw::setClawState(claw::OPEN);
     // claw dropped
@@ -143,7 +144,7 @@ void autonomous() {
     // end push cube in
 
     robot::profile_controller->setTarget("toTower", false, starts_on_red_side);
-    lift::moveToPosition(lift::TOWER_MID);
+    subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
     robot::profile_controller->waitUntilSettled();
     claw::setClawState(claw::OPEN);
     
@@ -170,41 +171,41 @@ void initBindings(std::vector<Binding *> & bind_list) {
 
     // Lift Position Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_UP), []() {
-        lift::moveToPosition(lift::UP);
+        subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::UP);
     }, nullptr, nullptr));
 
     // Lift Position Down binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_DOWN), []() {
-        lift::moveToPosition(lift::DOWN);
+        subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::DOWN);
     }, nullptr, nullptr));
 
     // Lift Position Tower Low binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_LOW), []() {
-        lift::moveToPosition(lift::TOWER_LOW);
+        subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_LOW);
     }, nullptr, nullptr));
 
     // Lift Position Tower Mid binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_MID), []() {
-        lift::moveToPosition(lift::TOWER_MID);
+        subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
     }, nullptr, nullptr));
 
     // Lift Position Tower High binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_HIGH), []() {
-        lift::moveToPosition(lift::TOWER_HIGH);
+        subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_HIGH);
     }, nullptr, nullptr));
 
     // Lift Move Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_UP), []() {
-        lift::move(20);
+        subsystems::Lift::getInstance()->move(20);
     }, []() {
-        lift::move(0);
+        subsystems::Lift::getInstance()->move(0);
     }, nullptr));
 
     // Lift Move Down binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_DOWN), []() {
-        lift::move(-25);
+        subsystems::Lift::getInstance()->move(-25);
     }, []() {
-        lift::move(0);
+        subsystems::Lift::getInstance()->move(0);
     }, nullptr));
 
     // TODO: Remove this before competition
@@ -233,9 +234,7 @@ void opcontrol() {
     cout << "Initialization finished, entering drive loop" << endl;
     while (true) {
         drive::opControl(master);
-        lift::printPos();
-
-        lift::update();
+        subsystems::Lift::getInstance()->update();
         claw::update();
         for (Binding * b : bind_list)
             b->update();
