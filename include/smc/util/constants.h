@@ -38,7 +38,7 @@ namespace robot {
 
     /* Begin claw block */
     const int CLAW_MOTOR_PORT = 15;
-    const int CLAW_MOTOR_POS_OPEN = 570; // TODO: Placeholder value
+    const int CLAW_MOTOR_POS_OPEN = 600; // TODO: Placeholder value
     const int CLAW_MOTOR_POS_CLOSED = 0;
 
     const char CLAW_OPEN_POS_LIMIT_SWITCH = 'H';
