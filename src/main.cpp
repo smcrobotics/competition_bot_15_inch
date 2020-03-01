@@ -19,21 +19,23 @@ std::shared_ptr<okapi::ChassisController> robot::chassis;
 /* End forward declaration block */
 
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-static bool pressed = false;
+static bool on_right_side = true;
+static bool update_lcd_info = true;
+
+void on_right_button() {
+    on_right_side = true;
+    pros::lcd::clear_line(0);
+    pros::lcd::set_text(0, "Auton: Right side");
+}
+
+void on_left_button() {
+    on_right_side = false;
+    pros::lcd::clear_line(0);
+    pros::lcd::set_text(0, "Auton: Left side");
+}
+
 void on_center_button() {
-    cout << "Center button dum dum" << endl;
-    pressed = !pressed;
-    if (pressed) {
-        pros::lcd::set_text(2, "I was pressed!");
-    } else {
-        pros::lcd::clear_line(2);
-    }
+    update_lcd_info = !update_lcd_info;
 }
 
 /**
@@ -44,6 +46,10 @@ void on_center_button() {
  */
 void initialize() {
     pros::lcd::initialize();
+    pros::lcd::register_btn0_cb(on_left_button);
+    pros::lcd::register_btn2_cb(on_right_button);
+    pros::lcd::register_btn1_cb(on_center_button);
+    
     robot::chassis =
             ChassisControllerBuilder().withMotors(
                             okapi::MotorGroup{robot::FRONT_LEFT_DRIVE_MOTOR_PORT, robot::BACK_LEFT_DRIVE_MOTOR_PORT},
@@ -166,7 +172,8 @@ void autonomous() {
  */
 void initBindings(std::vector<Binding *> & bind_list) {
     // Claw binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::TOGGLE_CLAW), claw::toggleClaw, nullptr, nullptr));
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::TOGGLE_CLAW),
+            subsystems::Claw::toggleClaw, nullptr, nullptr));
 
     // Lift Position Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_UP), []() {
@@ -216,11 +223,17 @@ void initBindings(std::vector<Binding *> & bind_list) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
 void opcontrol() {
+    const bool DEBUG = false;
+    bool isBrake = false;
+
     okapi::Controller master(okapi::ControllerId::master);
 
-    bool isBrake = false;
     std::vector<Binding *> bind_list;
     initBindings(bind_list);
+    std::vector<subsystems::AbstractSubsystem *> systems;
+
+    systems.push_back(subsystems::Claw::getInstance());
+
     // Have to do the drive-brake toggle here because it relies on variables local to main()
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::DRIVE_BRAKE_TOGGLE), nullptr,
                                        [isBrake, master]() mutable {
@@ -236,13 +249,21 @@ void opcontrol() {
         lift::printPos();
 
         lift::update();
-        claw::update();
         for (Binding * b : bind_list)
             b->update();
 
+        int lcd_line = 1; // start debug info on line 1 an increment for each subsystem
+        for (subsystems::AbstractSubsystem * system : systems) {
+            system->update();
 
-        // FOR DEBUGGING
-        std::cout << claw::getPosition() << std::endl;
+            if (update_lcd_info)
+                system->printLCD(lcd_line);
+
+            if (DEBUG)
+                system->printDebug();
+
+            lcd_line++;
+        }
 
         pros::delay(1);
     }
