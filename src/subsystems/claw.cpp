@@ -7,26 +7,34 @@ namespace claw {
     ClawState clawState;
 
     void init() {
-        claw_motor = util::initMotor(robot::CLAW_MOTOR_PORT);
+        claw_motor = util::initMotor(robot::CLAW_MOTOR_PORT, okapi::Motor::gearset::green);
+        claw_motor->setBrakeMode(constants::OKAPI_BRAKE);
+        claw_motor->moveVoltage(-12000);
+        pros::delay(500);
+        claw_motor->moveVoltage(0);
         claw_motor->tarePosition();
         clawState = ClawState::CLOSED;
-        // always start closed
-        claw_motor->moveVoltage(-12000);
     }
 
     void update() {}
 
     void setClawState(ClawState state) {
         if (state == ClawState::OPEN)
-            claw_motor->moveVoltage(12000);
+            // claw_motor->moveVoltage(12000);
+            claw_motor->moveAbsolute(600, 200);
         else
-            claw_motor->moveVoltage(-12000);
+            // claw_motor->moveVoltage(-12000);
+            claw_motor->moveAbsolute(0, 200);
 
         clawState = state;
     }
 
-    void printPos() {
-        std::cout << claw_motor->getPosition() << std::endl;
+    void moveClawToPosition(int position) {
+        
+    }
+
+    int getPosition() {
+        return claw_motor->getPosition();
     }
 
     void toggleClaw() {

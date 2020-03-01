@@ -16,7 +16,7 @@ namespace claw {
 
     void setClawState(ClawState state);
     void toggleClaw();
-    void printPos();
+    int getPosition();
 
     extern ClawState clawState;
     extern std::unique_ptr<okapi::Motor> claw_motor;

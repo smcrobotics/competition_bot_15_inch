@@ -240,6 +240,10 @@ void opcontrol() {
         for (Binding * b : bind_list)
             b->update();
 
+
+        // FOR DEBUGGING
+        std::cout << claw::getPosition() << std::endl;
+
         pros::delay(1);
     }
 

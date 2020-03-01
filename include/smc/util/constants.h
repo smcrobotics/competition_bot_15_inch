@@ -22,7 +22,7 @@ namespace robot {
     const int LIFT_MOTOR_PORT_RIGHT = 10; // TODO: Placeholder value
     
     const char LIFT_POS_LIMIT_SWITCH_UP = 'A'; // TODO: Placeholder value
-    const char LIFT_POS_LIMIT_SWITCH_DOWN = 'A'; //TODO: Placeholder value
+    const char LIFT_POS_LIMIT_SWITCH_DOWN = 'B';
 
     const float LIFT_DOWN_POS = 0;
     const float LIFT_UP_POS_LEFT = 1450.0;
@@ -40,10 +40,12 @@ namespace robot {
     const int CLAW_MOTOR_PORT = 15;
     const int CLAW_MOTOR_POS_OPEN = 570; // TODO: Placeholder value
     const int CLAW_MOTOR_POS_CLOSED = 0;
+
+    const char CLAW_OPEN_POS_LIMIT_SWITCH = 'H';
     /* End claw block */
 
     /*Begin sideIndicate*/
-    const int SIDE_INDICATE_LIMIT_SWITCH_PORT = 'B'; //TODO: Placeholder value
+    const int SIDE_INDICATE_LIMIT_SWITCH_PORT = 'C'; //TODO: Placeholder value
     /*End sideIndicate*/
 
     /* Begin random global pointer block */
