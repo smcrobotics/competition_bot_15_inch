@@ -13,8 +13,8 @@ namespace subsystems {
     Lift::Lift() : limit_timeout_bottom(0), limit_timeout_top(0), current_pos(DOWN) {
         left_motor = util::initMotor(robot::LIFT_MOTOR_PORT_LEFT);
         right_motor = util::initMotor(robot::LIFT_MOTOR_PORT_RIGHT);
-        Lift::top_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
-        Lift::bottom_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
+        top_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
+        bottom_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
 
         left_motor->tarePosition();
         right_motor->tarePosition();
@@ -26,26 +26,24 @@ namespace subsystems {
     }
 
     void Lift::update() {
-        if (Lift::top_limit_switch->isPressed() && Lift::limit_timeout_top == 0) {
-            std::cout << "top limit switch pressed" << std::endl;
+        if (top_limit_switch->isPressed() && limit_timeout_top == 0) {
             if (left_motor->getActualVelocity() > 0 && right_motor->getActualVelocity() > 0) {
                 left_motor->moveAbsolute(0, 1);
                 right_motor->moveAbsolute(0, 1);
             }
-        } else if (Lift::limit_timeout_top > 0) {
-            Lift::limit_timeout_top--;
+        } else if (limit_timeout_top > 0) {
+            limit_timeout_top--;
         }
         
-        if (Lift::bottom_limit_switch->isPressed() && Lift::limit_timeout_bottom == 0) {
-            std::cout << "bottom limit switch pressed" << std::endl;
+        if (bottom_limit_switch->isPressed() && limit_timeout_bottom == 0) {
+            left_motor->tarePosition();
+            right_motor->tarePosition();
             if (left_motor->getActualVelocity() < 0 && right_motor->getActualVelocity() < 0) {
                 left_motor->moveAbsolute(0, 1);
                 right_motor->moveAbsolute(0, 1);
-                left_motor->tarePosition();
-                right_motor->tarePosition();
             }
-        } else if (Lift::limit_timeout_bottom > 0) {
-            Lift::limit_timeout_bottom--;
+        } else if (limit_timeout_bottom > 0) {
+            limit_timeout_bottom--;
         }
     }
 
@@ -100,7 +98,7 @@ namespace subsystems {
 
     void Lift::move(std::int32_t velocity) {
         // (moving up while top limit switch is pressed) or (moving down while bottom limit switch is pressed)
-        if ((velocity > 0 && Lift::top_limit_switch->isPressed()) || (velocity < 0 && Lift::bottom_limit_switch->isPressed())) {
+        if ((velocity > 0 && top_limit_switch->isPressed()) || (velocity < 0 && bottom_limit_switch->isPressed())) {
             return;
         }
 

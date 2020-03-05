@@ -23,7 +23,6 @@ public:
     void printLCD(int line) override;
 
     void setClawState(ClawState state);
-
     static void toggleClaw();
 
 private:
