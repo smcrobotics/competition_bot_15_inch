@@ -17,7 +17,6 @@ namespace subsystems {
 
         claw_motor->tarePosition();
         clawState = ClawState::CLOSED;
-
     }
 
     Claw * Claw::getInstance() {
@@ -42,13 +41,13 @@ namespace subsystems {
         pros::lcd::set_text(line, out.str());
     }
 
-    void Claw::setClawState(ClawState state) {
-        if (state == ClawState::OPEN)
+    void Claw::setClawState(ClawState targetState) {
+        if (targetState == ClawState::OPEN)
             claw_motor->moveAbsolute(robot::CLAW_MOTOR_POS_OPEN, 200);
         else
             claw_motor->moveAbsolute(robot::CLAW_MOTOR_POS_CLOSED, 200);
 
-        clawState = state;
+        clawState = targetState;
     }
 
     void Claw::toggleClaw() {
