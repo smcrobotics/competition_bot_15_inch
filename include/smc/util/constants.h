@@ -18,8 +18,8 @@ namespace robot {
 
 
     /* Begin lift block */
-    const int LIFT_MOTOR_PORT_LEFT = -1; // TODO: Placeholder value
-    const int LIFT_MOTOR_PORT_RIGHT = 10; // TODO: Placeholder value
+    const int LIFT_MOTOR_PORT_LEFT = -2; // TODO: Placeholder value
+    const int LIFT_MOTOR_PORT_RIGHT = 9; // TODO: Placeholder value
     
     const char LIFT_POS_LIMIT_SWITCH_UP = 'A'; // TODO: Placeholder value
     const char LIFT_POS_LIMIT_SWITCH_DOWN = 'B';
