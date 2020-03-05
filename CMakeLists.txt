@@ -275,7 +275,6 @@ add_executable(competition_bot_15_inch
         include/pros/vision.h
         include/pros/vision.hpp
         include/smc/subsystems/claw.h
-        include/smc/subsystems/drive.h
         include/smc/subsystems/Lift.h
         include/smc/util/Binding.h
         include/smc/util/constants.h
@@ -285,7 +284,6 @@ add_executable(competition_bot_15_inch
         include/main.h
         src/subsystems/Lift.cpp
         src/subsystems/claw.cpp
-        src/subsystems/drive.cpp
         src/main.cpp
         src/util/Binding.cpp
         src/util/util.cpp
