@@ -84,10 +84,10 @@ namespace subsystems {
     void Lift::printLCD(int line) {
         std::ostringstream out;
 
-        out << "[L] left pos: " << left_motor->getPosition();
-        out << ", right pos: " << left_motor->getPosition();
-        out << ", top t'out: " << Lift::limit_timeout_top;
-        out << ", bot t'out: " << Lift::limit_timeout_bottom;
+        out << "[L] lpos: " << left_motor->getPosition();
+        out << ", rpos: " << left_motor->getPosition();
+        out << ", tt: " << Lift::limit_timeout_top;
+        out << ", bt: " << Lift::limit_timeout_bottom;
 
         pros::lcd::clear_line(line);
         pros::lcd::set_text(line, out.str());
