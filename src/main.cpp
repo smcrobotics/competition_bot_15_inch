@@ -7,6 +7,7 @@
 #include "smc/robot.h"
 #include "smc/subsystems/Lift.h"
 #include "smc/util/Binding.h"
+#include "smc/util/util.h"
 
 using namespace okapi;
 using std::cout;
@@ -246,7 +247,9 @@ void opcontrol() {
 
     cout << "Initialization finished, entering drive loop" << endl;
     while (true) {
-        drive::opControl(master);
+        double leftY = util::powKeepSign(master.getAnalog(okapi::ControllerAnalog::leftY), 2);
+        double rightY = util::powKeepSign(master.getAnalog(okapi::ControllerAnalog::rightY), 2);
+        robot::chassis->getModel()->tank(leftY, rightY);
 
         subsystems::Lift::getInstance()->update();
         claw::update();
