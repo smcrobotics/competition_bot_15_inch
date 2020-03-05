@@ -9,19 +9,6 @@
 #include "okapi/api.hpp"
 #include "smc/subsystems/AbstractSubsystem.h"
 
-namespace claw {
-    enum ClawState { CLOSED = 0, OPEN = 1 };
-
-    void init();
-    void update();
-
-    void setClawState(ClawState state);
-    void toggleClaw();
-
-    extern ClawState clawState;
-    extern std::unique_ptr<okapi::Motor> claw_motor;
-}
-
 namespace subsystems {
 class Claw : public AbstractSubsystem {
 public:
