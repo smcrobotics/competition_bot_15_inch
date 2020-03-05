@@ -12,13 +12,13 @@ namespace robot {
     /* Begin drive motor block */
     const int FRONT_LEFT_DRIVE_MOTOR_PORT = 5;
     const int FRONT_RIGHT_DRIVE_MOTOR_PORT = -6;
-    const int BACK_LEFT_DRIVE_MOTOR_PORT = 19;
+    const int BACK_LEFT_DRIVE_MOTOR_PORT = 11;
     const int BACK_RIGHT_DRIVE_MOTOR_PORT = -20;
     /* End drive motor block */
 
 
     /* Begin lift block */
-    const int LIFT_MOTOR_PORT_LEFT = -11; // TODO: Placeholder value
+    const int LIFT_MOTOR_PORT_LEFT = -1; // TODO: Placeholder value
     const int LIFT_MOTOR_PORT_RIGHT = 10; // TODO: Placeholder value
     
     const char LIFT_POS_LIMIT_SWITCH_UP = 'A'; // TODO: Placeholder value
@@ -39,7 +39,7 @@ namespace robot {
     /* Begin claw block */
     const int CLAW_MOTOR_PORT = 15;
     const int CLAW_MOTOR_POS_OPEN = 600; // TODO: Placeholder value
-    const int CLAW_MOTOR_POS_CLOSED = 0;
+    const int CLAW_MOTOR_POS_CLOSED = 450;
 
     const char CLAW_OPEN_POS_LIMIT_SWITCH = 'H';
     /* End claw block */
