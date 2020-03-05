@@ -59,9 +59,9 @@ void initialize() {
                     .withDimensions(AbstractMotor::gearset::green, ChassisScales({4_in, 12.5_in}, okapi::imev5GreenTPR))
                     .build();
 
+    // Make sure subsystems get initialized by this point
     subsystems::Lift::getInstance();
-    claw::init();
-    sideIndicate::init();
+    subsystems::Claw::getInstance();
 
     // limits: velocity, acceleration, jerk
     robot::profile_controller = okapi::AsyncMotionProfileControllerBuilder()
@@ -125,6 +125,10 @@ void competition_initialize() {}
 
 
 void autonomous() {
+    subsystems::Claw * claw = subsystems::Claw::getInstance();
+    auto OPEN = subsystems::Claw::ClawState::OPEN;
+    auto CLOSED = subsystems::Claw::ClawState::CLOSED;
+
     /**
     sample routine 1: pick up cube and place it in a tower
     **/
@@ -140,20 +144,20 @@ void autonomous() {
     pros::delay(1000);
     subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::DOWN);
     pros::delay(1000);
-    claw::setClawState(claw::OPEN);
+    claw->setClawState(OPEN);
     // claw dropped
 
     bool starts_on_red_side = false; // if we start on red side, mirror the path
     robot::profile_controller->setTarget("toCube", false, starts_on_red_side);
     robot::profile_controller->waitUntilSettled();
-    claw::setClawState(claw::CLOSED);
+    claw->setClawState(CLOSED);
 
     // end push cube in
 
     robot::profile_controller->setTarget("toTower", false, starts_on_red_side);
     subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
     robot::profile_controller->waitUntilSettled();
-    claw::setClawState(claw::OPEN);
+    claw->setClawState(OPEN);
     
     robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
@@ -235,6 +239,7 @@ void opcontrol() {
     std::vector<subsystems::AbstractSubsystem *> systems;
 
     systems.push_back(subsystems::Claw::getInstance());
+    systems.push_back(subsystems::Lift::getInstance());
 
     // Have to do the drive-brake toggle here because it relies on variables local to main()
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::DRIVE_BRAKE_TOGGLE), nullptr,
@@ -251,8 +256,6 @@ void opcontrol() {
         double rightY = util::powKeepSign(master.getAnalog(okapi::ControllerAnalog::rightY), 2);
         robot::chassis->getModel()->tank(leftY, rightY);
 
-        subsystems::Lift::getInstance()->update();
-        claw::update();
 
         for (Binding * b : bind_list)
             b->update();
