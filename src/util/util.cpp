@@ -23,5 +23,9 @@ namespace util {
         return make_unique<okapi::ADIButton>(port, false);
     }
 
+    double powKeepSign(double num, double power) {
+        return pow(abs(num), power) * num / abs(num);
+    }
+
 }
 
