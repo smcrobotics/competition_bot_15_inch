@@ -1,4 +1,4 @@
-#include "smc/subsystems/claw.h"
+#include "smc/subsystems/Claw.h"
 #include "smc/util/util.h"
 #include "smc/util/constants.h"
 

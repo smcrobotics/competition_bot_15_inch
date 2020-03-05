@@ -12,7 +12,7 @@
 #define _ROBOT_H
 
 #include "smc/subsystems/Lift.h"
-#include "smc/subsystems/claw.h"
+#include "smc/subsystems/Claw.h"
 #include "util/constants.h"
 
 #endif
