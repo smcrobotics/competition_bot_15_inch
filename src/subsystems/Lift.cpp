@@ -71,11 +71,6 @@ namespace subsystems {
                 left_motor->moveAbsolute(robot::LIFT_TOWER_MID_POS_LEFT, velocity);
                 right_motor->moveAbsolute(robot::LIFT_TOWER_MID_POS_RIGHT, velocity);
                 break;
-            // case TOWER_HIGH:
-            //     velocity = (robot::LIFT_TOWER_HIGH_POS_LEFT - left_motor->getPosition() > 0 ? constants::LIFT_UP_VELOCITY : constants::LIFT_DOWN_VELOCITY);
-            //     left_motor->moveAbsolute(robot::LIFT_TOWER_HIGH_POS_LEFT, velocity);
-            //     right_motor->moveAbsolute(robot::LIFT_TOWER_HIGH_POS_RIGHT, velocity);
-            //     break;
         }
     }
 
