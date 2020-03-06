@@ -65,7 +65,7 @@ namespace bindings {
 }
 
 namespace constants {
-    const int MOTOR_MOVE_MAX = 12000;
+    const int MOTOR_MAX_VOLTAGE = 12000;
 
     const std::int32_t LIFT_UP_VELOCITY = 75;
     const std::int32_t LIFT_DOWN_VELOCITY = 50;

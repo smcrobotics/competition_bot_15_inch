@@ -131,6 +131,13 @@ namespace subsystems {
             pros::delay(10);
     }
 
+    void Lift::moveVoltageMax(int sign) {
+        if (sign >= -1 && sign <= 1) {
+            Lift::getInstance()->left_motor->moveVoltage(sign * constants::MOTOR_MAX_VOLTAGE);
+            Lift::getInstance()->right_motor->moveVoltage(sign * constants::MOTOR_MAX_VOLTAGE);
+        }
+    }
+
     void Lift::move(std::int32_t velocity) {
         // (moving up while top limit switch is pressed) or (moving down while bottom limit switch is pressed)
         if ((velocity > 0 && top_limit_switch->isPressed()) || (velocity < 0 && bottom_limit_switch->isPressed())) {

@@ -27,6 +27,8 @@ class Lift : public AbstractSubsystem {
         static void raiseByOneCube();
         static void lowerByOneCube();
 
+        static void moveVoltageMax(int sign);
+
     private:
         Lift();
 

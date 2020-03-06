@@ -205,16 +205,16 @@ void initBindings(std::vector<Binding *> & bind_list) {
 
     // Lift Move Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_UP), []() {
-        subsystems::Lift::getInstance()->move(20);
+        subsystems::Lift::getInstance()->moveVoltageMax(1);
     }, []() {
-        subsystems::Lift::getInstance()->move(0);
+        subsystems::Lift::getInstance()->moveVoltageMax(0);
     }, nullptr));
 
     // Lift Move Down binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_DOWN), []() {
-        subsystems::Lift::getInstance()->move(-25);
+        subsystems::Lift::getInstance()->moveVoltageMax(-1);
     }, []() {
-        subsystems::Lift::getInstance()->move(0);
+        subsystems::Lift::getInstance()->moveVoltageMax(0);
     }, nullptr));
 
     // Lift move down one cube binding
