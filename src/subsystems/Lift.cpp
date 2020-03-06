@@ -33,8 +33,8 @@ namespace subsystems {
     void Lift::update() {
         if (top_limit_switch->isPressed() && limit_timeout_top == 0) {
             if (left_motor->getActualVelocity() > 0 && right_motor->getActualVelocity() > 0) {
-                left_motor->moveAbsolute(0, 1);
-                right_motor->moveAbsolute(0, 1);
+                left_motor->moveAbsolute(left_motor->getPosition(), 1);
+                right_motor->moveAbsolute(right_motor->getPosition(), 1);
             }
         } else if (limit_timeout_top > 0) {
             limit_timeout_top--;
@@ -113,6 +113,8 @@ namespace subsystems {
 
         line++;
         out.clear();
+        out.str("");
+        
         out << "[C] lV: " << left_motor->getVoltage();
         out << ", rV: " << right_motor->getVoltage();
         out << ", rT: " << right_motor->getTemperature();
