@@ -11,7 +11,7 @@ namespace subsystems {
         claw_motor->setBrakeMode(constants::OKAPI_BRAKE);
 
         // Make sure claw is closed before we tare position
-        claw_motor->moveVoltage(-12000);
+        claw_motor->moveVoltage(-constants::MOTOR_MOVE_MAX);
         pros::delay(500);
         claw_motor->moveVoltage(0);
 
