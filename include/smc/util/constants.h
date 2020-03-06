@@ -22,7 +22,7 @@ namespace robot {
     const int LIFT_MOTOR_PORT_RIGHT = 9; // TODO: Placeholder value
     
     const char LIFT_POS_LIMIT_SWITCH_UP = 'A'; // TODO: Placeholder value
-    const char LIFT_POS_LIMIT_SWITCH_DOWN = 'B';
+    const char LIFT_POS_LIMIT_SWITCH_DOWN = 'H';
 
     const float LIFT_DOWN_POS = 0;
     const float LIFT_UP_POS_LEFT = 1450.0;
@@ -40,13 +40,7 @@ namespace robot {
     const int CLAW_MOTOR_PORT = 15;
     const int CLAW_MOTOR_POS_OPEN = 600; // TODO: Placeholder value
     const int CLAW_MOTOR_POS_CLOSED = 450;
-
-    const char CLAW_OPEN_POS_LIMIT_SWITCH = 'H';
     /* End claw block */
-
-    /*Begin sideIndicate*/
-    const int SIDE_INDICATE_LIMIT_SWITCH_PORT = 'C'; //TODO: Placeholder value
-    /*End sideIndicate*/
 
     /* Begin random global pointer block */
     extern std::shared_ptr<okapi::ChassisController> chassis;
@@ -60,7 +54,8 @@ namespace bindings {
     const auto LIFT_POS_DOWN = okapi::ControllerDigital::down;
     const auto LIFT_POS_TOWER_LOW = okapi::ControllerDigital::Y; // TODO: Placeholder value
     const auto LIFT_POS_TOWER_MID = okapi::ControllerDigital::B; // TODO: Placeholder value
-    const auto LIFT_POS_TOWER_HIGH = okapi::ControllerDigital::A; // TODO: Placeholder value
+    const auto LIFT_UP_ONE_CUBE = okapi::ControllerDigital::L1;
+    const auto LIFT_DOWN_ONE_CUBE = okapi::ControllerDigital::L2;
     const auto LIFT_MOVE_UP = okapi::ControllerDigital::R1; // TODO: Placeholder value
     const auto LIFT_MOVE_DOWN = okapi::ControllerDigital::R2; // TODO: Placeholder value
 
@@ -72,7 +67,7 @@ namespace bindings {
 namespace constants {
     const int MOTOR_MOVE_MAX = 12000;
 
-    const std::int32_t LIFT_UP_VELOCITY = 50;
+    const std::int32_t LIFT_UP_VELOCITY = 75;
     const std::int32_t LIFT_DOWN_VELOCITY = 50;
 
     const auto OKAPI_BRAKE = okapi::AbstractMotor::brakeMode::brake;

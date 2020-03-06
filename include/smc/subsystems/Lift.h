@@ -24,6 +24,9 @@ class Lift : public AbstractSubsystem {
 
         static void togglePosition();
 
+        static void raiseByOneCube();
+        static void lowerByOneCube();
+
     private:
         Lift();
 
