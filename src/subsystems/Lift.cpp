@@ -16,6 +16,11 @@ namespace subsystems {
         top_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
         bottom_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
 
+        while (!bottom_limit_switch->isPressed()) {
+            move(-20);
+            pros::delay(2);
+        }
+
         left_motor->tarePosition();
         right_motor->tarePosition();
     }
@@ -36,9 +41,9 @@ namespace subsystems {
         }
         
         if (bottom_limit_switch->isPressed() && limit_timeout_bottom == 0) {
-            left_motor->tarePosition();
-            right_motor->tarePosition();
             if (left_motor->getActualVelocity() < 0 && right_motor->getActualVelocity() < 0) {
+                left_motor->tarePosition();
+                right_motor->tarePosition();
                 left_motor->moveAbsolute(0, 1);
                 right_motor->moveAbsolute(0, 1);
             }
@@ -72,6 +77,22 @@ namespace subsystems {
         }
     }
 
+    void Lift::raiseByOneCube() {
+        cout << "raise called" << endl;
+        auto lift = Lift::getInstance();
+        int diff = 206;
+        lift->left_motor->moveAbsolute(lift->left_motor->getPosition() + diff, constants::LIFT_UP_VELOCITY);
+        lift->right_motor->moveAbsolute(lift->right_motor->getPosition() + diff, constants::LIFT_UP_VELOCITY);
+    }
+
+    void Lift::lowerByOneCube() {
+        cout << "lower called" << endl;
+        auto lift = Lift::getInstance();
+        int diff = 206;
+        lift->left_motor->moveAbsolute(lift->left_motor->getPosition() - diff, constants::LIFT_DOWN_VELOCITY);
+        lift->right_motor->moveAbsolute(lift->right_motor->getPosition() - diff, constants::LIFT_DOWN_VELOCITY);
+    }
+
     void Lift::printDebug() {
         cout << "[DEBUG][Lift] Left target: " << left_motor->getTargetPosition() << endl;
         cout << "[DEBUG][Lift] Right target: " << right_motor->getTargetPosition() << endl;
@@ -83,7 +104,7 @@ namespace subsystems {
         std::ostringstream out;
 
         out << "[L] lpos: " << left_motor->getPosition();
-        out << ", rpos: " << left_motor->getPosition();
+        out << ", rpos: " << right_motor->getPosition();
         out << ", tt: " << Lift::limit_timeout_top;
         out << ", bt: " << Lift::limit_timeout_bottom;
 

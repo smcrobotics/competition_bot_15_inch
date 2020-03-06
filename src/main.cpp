@@ -201,11 +201,6 @@ void initBindings(std::vector<Binding *> & bind_list) {
         subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
     }, nullptr, nullptr));
 
-    // Lift Position Tower High binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_POS_TOWER_HIGH), []() {
-        subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_HIGH);
-    }, nullptr, nullptr));
-
     // Lift Move Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_UP), []() {
         subsystems::Lift::getInstance()->move(20);
@@ -219,6 +214,14 @@ void initBindings(std::vector<Binding *> & bind_list) {
     }, []() {
         subsystems::Lift::getInstance()->move(0);
     }, nullptr));
+
+    // Lift move down one cube binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_DOWN_ONE_CUBE),
+        subsystems::Lift::lowerByOneCube, nullptr, nullptr));
+
+    // Lift move up one cube binding
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_UP_ONE_CUBE),
+        subsystems::Lift::raiseByOneCube, nullptr, nullptr));
 
     // TODO: Remove this before competition
 //    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
@@ -259,6 +262,8 @@ void opcontrol() {
 
         for (Binding * b : bind_list)
             b->update();
+
+        subsystems::Lift::getInstance()->printDebug();
 
         int lcd_line = 1; // start debug info on line 1 an increment for each subsystem
         for (subsystems::AbstractSubsystem * system : systems) {
