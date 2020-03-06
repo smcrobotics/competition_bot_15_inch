@@ -79,7 +79,7 @@ namespace subsystems {
         cout << "[DEBUG][Lift] Right actual: " << right_motor->getPosition() << endl;
     }
 
-    void Lift::printLCD(int line) {
+    int Lift::printLCD(int line) {
         std::ostringstream out;
 
         out << "[L] lpos: " << left_motor->getPosition();
@@ -89,6 +89,18 @@ namespace subsystems {
 
         pros::lcd::clear_line(line);
         pros::lcd::set_text(line, out.str());
+
+        line++;
+        out.clear();
+        out << "[C] lV: " << left_motor->getVoltage();
+        out << ", rV: " << right_motor->getVoltage();
+        out << ", rT: " << right_motor->getTemperature();
+        out << ", lT: " << left_motor->getTemperature();
+
+        pros::lcd::clear_line(line);
+        pros::lcd::set_text(line, out.str());
+
+        return line;
     }
 
     void Lift::waitUntilSettled() {

@@ -52,6 +52,8 @@ void initialize() {
     pros::lcd::register_btn2_cb(on_right_button);
     pros::lcd::register_btn1_cb(on_center_button);
 
+    pros::lcd::set_text(0, "Auton: Right side");
+
     robot::chassis =
             ChassisControllerBuilder().withMotors(
                             okapi::MotorGroup{robot::FRONT_LEFT_DRIVE_MOTOR_PORT, robot::BACK_LEFT_DRIVE_MOTOR_PORT},
@@ -265,7 +267,7 @@ void opcontrol() {
             system->update();
 
             if (update_lcd_info)
-                system->printLCD(lcd_line);
+                lcd_line = system->printLCD(lcd_line);
 
             if (DEBUG)
                 system->printDebug();

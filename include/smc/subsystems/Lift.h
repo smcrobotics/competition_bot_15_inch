@@ -16,9 +16,7 @@ class Lift : public AbstractSubsystem {
 
         void update() override;
         void printDebug() override;
-        void printLCD(int line) override;
-
-        int32_t getPosition();
+        int printLCD(int line) override;
 
         void moveToPosition(LiftPosition position);
         void waitUntilSettled();

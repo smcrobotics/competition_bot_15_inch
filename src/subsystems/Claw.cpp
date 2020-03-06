@@ -32,13 +32,15 @@ namespace subsystems {
         cout << "[DEBUG][Claw] Claw state: " << ((bool) clawState ? "Open" : "Closed") << endl;
     }
 
-    void Claw::printLCD(int line) {
+    int Claw::printLCD(int line) {
         std::ostringstream out;
         out << "[C] state: " << (bool) clawState;
         out << ", pos: " << claw_motor->getPosition();
 
         pros::lcd::clear_line(line);
         pros::lcd::set_text(line, out.str());
+
+        return line;
     }
 
     void Claw::setClawState(ClawState targetState) {

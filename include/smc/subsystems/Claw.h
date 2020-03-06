@@ -20,7 +20,7 @@ public:
 
     void update() override;
     void printDebug() override;
-    void printLCD(int line) override;
+    int printLCD(int line) override;
 
     void setClawState(ClawState state);
     static void toggleClaw();

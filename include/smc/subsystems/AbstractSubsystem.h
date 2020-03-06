@@ -12,7 +12,7 @@ namespace subsystems {
 
         virtual void printDebug() = 0;
 
-        virtual void printLCD(int line) = 0;
+        virtual int printLCD(int line) = 0;
     };
 }
 
