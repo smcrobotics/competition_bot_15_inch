@@ -21,17 +21,17 @@ std::shared_ptr<okapi::ChassisController> robot::chassis;
 /* End forward declaration block */
 
 
-static bool on_right_side = true;
+static bool on_red_side = true;
 static bool update_lcd_info = true;
 
-void on_right_button() {
-    on_right_side = true;
+void on_red_button() {
+    on_red_side = true;
     pros::lcd::clear_line(0);
     pros::lcd::set_text(0, "Auton: Right side");
 }
 
-void on_left_button() {
-    on_right_side = false;
+void on_blue_button() {
+    on_red_side = false;
     pros::lcd::clear_line(0);
     pros::lcd::set_text(0, "Auton: Left side");
 }
@@ -48,8 +48,8 @@ void on_center_button() {
  */
 void initialize() {
     pros::lcd::initialize();
-    pros::lcd::register_btn0_cb(on_left_button);
-    pros::lcd::register_btn2_cb(on_right_button);
+    pros::lcd::register_btn0_cb(on_blue_button);
+    pros::lcd::register_btn2_cb(on_red_button);
     pros::lcd::register_btn1_cb(on_center_button);
 
     pros::lcd::set_text(0, "Auton: Right side");
@@ -71,17 +71,17 @@ void initialize() {
             .withOutput(robot::chassis)
             .buildMotionProfileController();
 
-    robot::profile_controller->generatePath({
-                                                    {89_cm, 0_cm, 0_deg},
-                                                    {0_in, 0_in, 0_deg}}, "forward"
-    );
+    // robot::profile_controller->generatePath({
+    //                                                 {89_cm, 0_cm, 0_deg},
+    //                                                 {0_in, 0_in, 0_deg}}, "forward"
+    // );
 
-    robot::profile_controller->generatePath({{89_cm, 0_in, 0_deg},
-                                                    {67_cm, 85_cm, -90_deg}}, "toCube" // Profile name
-    );
+    // robot::profile_controller->generatePath({{89_cm, 0_in, 0_deg},
+    //                                                 {67_cm, 85_cm, -90_deg}}, "toCube" // Profile name
+    // );
 
-    robot::profile_controller->generatePath({{67_cm, 85_cm, -90_deg},
-                                             {4_cm, 91.5_cm, 0_deg}}, "toTower");
+    // robot::profile_controller->generatePath({{67_cm, 85_cm, -90_deg},
+    //                                          {4_cm, 91.5_cm, 0_deg}}, "toTower");
 
    // bool starts_on_red_side = sideIndicate::getSide();
    //  if (starts_on_red_side) {
@@ -131,15 +131,12 @@ void autonomous() {
     auto OPEN = subsystems::Claw::ClawState::OPEN;
     auto CLOSED = subsystems::Claw::ClawState::CLOSED;
 
-    /**
-    sample routine 1: pick up cube and place it in a tower
-    **/
-    robot::chassis->getModel()->setBrakeMode(constants::OKAPI_BRAKE);
+    // robot::chassis->getModel()->setBrakeMode(constants::OKAPI_BRAKE);
 
-    robot::profile_controller->setTarget("forward");
-    robot::profile_controller->waitUntilSettled();
-    robot::profile_controller->setTarget("forward", true); // reverse back to initial position
-    robot::profile_controller->waitUntilSettled();
+    // robot::profile_controller->setTarget("forward");
+    // robot::profile_controller->waitUntilSettled();
+    // robot::profile_controller->setTarget("forward", true); // reverse back to initial position
+    // robot::profile_controller->waitUntilSettled();
 
     // drop claw
     subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_LOW);
@@ -149,19 +146,23 @@ void autonomous() {
     claw->setClawState(OPEN);
     // claw dropped
 
-    bool starts_on_red_side = false; // if we start on red side, mirror the path
-    robot::profile_controller->setTarget("toCube", false, starts_on_red_side);
-    robot::profile_controller->waitUntilSettled();
-    claw->setClawState(CLOSED);
+    robot::chassis->moveDistance(3_ft);
+    pros::delay(2000);
+    robot::chassis->moveDistance(-3_ft);
 
-    // end push cube in
+    // bool starts_on_red_side = false; // if we start on red side, mirror the path
+    // robot::profile_controller->setTarget("toCube", false, starts_on_red_side);
+    // robot::profile_controller->waitUntilSettled();
+    // claw->setClawState(CLOSED);
 
-    robot::profile_controller->setTarget("toTower", false, starts_on_red_side);
-    subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
-    robot::profile_controller->waitUntilSettled();
-    claw->setClawState(OPEN);
+    // // end push cube in
+
+    // robot::profile_controller->setTarget("toTower", false, starts_on_red_side);
+    // subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
+    // robot::profile_controller->waitUntilSettled();
+    // claw->setClawState(OPEN);
     
-    robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
+    // robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
 
 
@@ -205,7 +206,7 @@ void initBindings(std::vector<Binding *> & bind_list) {
 
     // Lift Move Up binding
     bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_MOVE_UP), []() {
-        subsystems::Lift::getInstance()->moveVoltageMax(1);
+        subsystems::Lift::getInstance()->move(constants::LIFT_UP_VELOCITY);
     }, []() {
         subsystems::Lift::getInstance()->moveVoltageMax(0);
     }, nullptr));
@@ -217,17 +218,23 @@ void initBindings(std::vector<Binding *> & bind_list) {
         subsystems::Lift::getInstance()->moveVoltageMax(0);
     }, nullptr));
 
-    // Lift move down one cube binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_DOWN_ONE_CUBE),
-        subsystems::Lift::lowerByOneCube, nullptr, nullptr));
+    // Move claw closed manual
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::CLAW_MANUAL_CLOSE), []() {
+        subsystems::Claw::getInstance()->moveManual(constants::CLAW_MOVE_VELOCITY);
+    }, []() {
+        subsystems::Claw::getInstance()->moveManual(0);
+    }, nullptr));
 
-    // Lift move up one cube binding
-    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::LIFT_UP_ONE_CUBE),
-        subsystems::Lift::raiseByOneCube, nullptr, nullptr));
+    // Move claw open manual
+    bind_list.emplace_back(new Binding(okapi::ControllerButton(bindings::CLAW_MANUAL_OPEN), []() {
+        subsystems::Claw::getInstance()->moveManual(-constants::CLAW_MOVE_VELOCITY);
+    }, []() {
+        subsystems::Claw::getInstance()->moveManual(0);
+    }, nullptr));
 
-    // TODO: Remove this before competition
-//    bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
-    // Note: Au`to bind is blocking
+   // //  TODO: Remove this before competition
+   // bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
+   //  Note: Auto bind is blocking
     /** End bind block **/
 }
 
@@ -264,8 +271,6 @@ void opcontrol() {
 
         for (Binding * b : bind_list)
             b->update();
-
-        subsystems::Lift::getInstance()->printDebug();
 
         int lcd_line = 1; // start debug info on line 1 an increment for each subsystem
         for (subsystems::AbstractSubsystem * system : systems) {

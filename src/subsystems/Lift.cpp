@@ -16,11 +16,6 @@ namespace subsystems {
         top_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
         bottom_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
 
-        while (!bottom_limit_switch->isPressed()) {
-            move(-20);
-            pros::delay(2);
-        }
-
         left_motor->tarePosition();
         right_motor->tarePosition();
     }
@@ -35,17 +30,20 @@ namespace subsystems {
             if (left_motor->getActualVelocity() > 0 && right_motor->getActualVelocity() > 0) {
                 left_motor->moveAbsolute(left_motor->getPosition(), 1);
                 right_motor->moveAbsolute(right_motor->getPosition(), 1);
+                // limit_timeout_top = 1000;
             }
         } else if (limit_timeout_top > 0) {
             limit_timeout_top--;
         }
         
         if (bottom_limit_switch->isPressed() && limit_timeout_bottom == 0) {
-            if (left_motor->getActualVelocity() < 0 && right_motor->getActualVelocity() < 0) {
-                left_motor->tarePosition();
-                right_motor->tarePosition();
+            left_motor->tarePosition();
+            right_motor->tarePosition();
+                
+            if (left_motor->getActualVelocity() < 0 || right_motor->getActualVelocity() < 0) {
                 left_motor->moveAbsolute(0, 1);
                 right_motor->moveAbsolute(0, 1);
+                // limit_timeout_bottom = 1000;
             }
         } else if (limit_timeout_bottom > 0) {
             limit_timeout_bottom--;
@@ -78,7 +76,7 @@ namespace subsystems {
     }
 
     void Lift::raiseByOneCube() {
-        cout << "raise called" << endl;
+        // cout << "raise called" << endl;
         auto lift = Lift::getInstance();
         int diff = 206;
         lift->left_motor->moveAbsolute(lift->left_motor->getPosition() + diff, constants::LIFT_UP_VELOCITY);
@@ -86,7 +84,7 @@ namespace subsystems {
     }
 
     void Lift::lowerByOneCube() {
-        cout << "lower called" << endl;
+        // cout << "lower called" << endl;
         auto lift = Lift::getInstance();
         int diff = 206;
         lift->left_motor->moveAbsolute(lift->left_motor->getPosition() - diff, constants::LIFT_DOWN_VELOCITY);
@@ -146,5 +144,9 @@ namespace subsystems {
 
         left_motor->moveVelocity(velocity);
         right_motor->moveVelocity(velocity);
+    }
+
+    std::pair<int, int> Lift::getPosition() {
+        return std::pair<int, int>(left_motor->getPosition(), right_motor->getPosition());
     }
 }

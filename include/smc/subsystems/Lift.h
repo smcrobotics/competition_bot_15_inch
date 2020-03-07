@@ -29,6 +29,8 @@ class Lift : public AbstractSubsystem {
 
         static void moveVoltageMax(int sign);
 
+        std::pair<int, int> getPosition();
+
     private:
         Lift();
 
