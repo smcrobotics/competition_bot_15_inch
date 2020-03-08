@@ -11,15 +11,10 @@ using std::endl;
 
 namespace subsystems {
     Lift::Lift() : limit_timeout_bottom(0), limit_timeout_top(0), current_pos(DOWN) {
-        left_motor = util::initMotor(robot::LIFT_MOTOR_PORT_LEFT);
-        right_motor = util::initMotor(robot::LIFT_MOTOR_PORT_RIGHT);
+        left_motor = util::initMotor(robot::LIFT_MOTOR_PORT_LEFT, okapi::AbstractMotor::gearset::red);
+        right_motor = util::initMotor(robot::LIFT_MOTOR_PORT_RIGHT, okapi::AbstractMotor::gearset::red);
         top_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
         bottom_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
-
-        while (!bottom_limit_switch->isPressed()) {
-            move(-20);
-            pros::delay(2);
-        }
 
         left_motor->tarePosition();
         right_motor->tarePosition();
@@ -31,25 +26,25 @@ namespace subsystems {
     }
 
     void Lift::update() {
-        if (top_limit_switch->isPressed() && limit_timeout_top == 0) {
-            if (left_motor->getActualVelocity() > 0 && right_motor->getActualVelocity() > 0) {
-                left_motor->moveAbsolute(left_motor->getPosition(), 1);
-                right_motor->moveAbsolute(right_motor->getPosition(), 1);
-            }
-        } else if (limit_timeout_top > 0) {
-            limit_timeout_top--;
-        }
-        
-        if (bottom_limit_switch->isPressed() && limit_timeout_bottom == 0) {
-            if (left_motor->getActualVelocity() < 0 && right_motor->getActualVelocity() < 0) {
-                left_motor->tarePosition();
-                right_motor->tarePosition();
-                left_motor->moveAbsolute(0, 1);
-                right_motor->moveAbsolute(0, 1);
-            }
-        } else if (limit_timeout_bottom > 0) {
-            limit_timeout_bottom--;
-        }
+//        if (top_limit_switch->isPressed() && limit_timeout_top == 0) {
+//            if (left_motor->getActualVelocity() > 0 && right_motor->getActualVelocity() > 0) {
+//                left_motor->moveAbsolute(left_motor->getPosition(), 1);
+//                right_motor->moveAbsolute(right_motor->getPosition(), 1);
+//            }
+//        } else if (limit_timeout_top > 0) {
+//            limit_timeout_top--;
+//        }
+//
+//        if (bottom_limit_switch->isPressed() && limit_timeout_bottom == 0) {
+//            if (left_motor->getActualVelocity() < 0 && right_motor->getActualVelocity() < 0) {
+//                left_motor->tarePosition();
+//                right_motor->tarePosition();
+//                left_motor->moveAbsolute(0, 1);
+//                right_motor->moveAbsolute(0, 1);
+//            }
+//        } else if (limit_timeout_bottom > 0) {
+//            limit_timeout_bottom--;
+//        }
     }
 
     void Lift::moveToPosition(Lift::LiftPosition pos) {
@@ -114,10 +109,15 @@ namespace subsystems {
         line++;
         out.clear();
         out.str("");
-        
+
         out << "[C] lV: " << left_motor->getVoltage();
         out << ", rV: " << right_motor->getVoltage();
-        out << ", rT: " << right_motor->getTemperature();
+
+        line++;
+        out.clear();
+        out.str("");
+
+        out << "[C] rT: " << right_motor->getTemperature();
         out << ", lT: " << left_motor->getTemperature();
 
         pros::lcd::clear_line(line);
