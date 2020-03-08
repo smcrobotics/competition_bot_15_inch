@@ -11,12 +11,15 @@ namespace subsystems {
         claw_motor->setBrakeMode(constants::OKAPI_BRAKE);
 
         // Make sure claw is closed before we tare position
-        claw_motor->moveVoltage(-constants::MOTOR_MOVE_MAX);
-        pros::delay(500);
-        claw_motor->moveVoltage(0);
+        // claw_motor->moveVoltage(-constants::MOTOR_MAX_VOLTAGE);
+        // pros::delay(500);
+        // claw_motor->moveVoltage(0);
 
         claw_motor->tarePosition();
         clawState = ClawState::CLOSED;
+
+
+        cout << "claw initialized" << endl;
     }
 
     Claw * Claw::getInstance() {
@@ -55,5 +58,16 @@ namespace subsystems {
     void Claw::toggleClaw() {
         auto claw = getInstance();
         claw->setClawState((ClawState) !((bool) claw->clawState));
+    }
+
+    void Claw::moveManual(int velocity) {
+        // if (velocity < 0 && claw_motor->getPosition() < robot::CLAW_MOTOR_POS_CLOSED) {
+        //     return;
+        // }
+        // if (velocity > 0 && claw_motor->getPosition() > robot::CLAW_MOTOR_POS_OPEN) {
+        //     return;
+        // }
+        
+        claw_motor->moveVelocity(velocity);
     }
 }

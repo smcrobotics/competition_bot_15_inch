@@ -25,6 +25,8 @@ public:
     void setClawState(ClawState state);
     static void toggleClaw();
 
+    void moveManual(int velocity);
+
 private:
     Claw();
 

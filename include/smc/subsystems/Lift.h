@@ -27,6 +27,10 @@ class Lift : public AbstractSubsystem {
         static void raiseByOneCube();
         static void lowerByOneCube();
 
+        static void moveVoltageMax(int sign);
+
+        std::pair<int, int> getPosition();
+
     private:
         Lift();
 

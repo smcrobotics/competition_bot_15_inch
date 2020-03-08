@@ -25,19 +25,17 @@ namespace robot {
     const char LIFT_POS_LIMIT_SWITCH_DOWN = 'H';
 
     const float LIFT_DOWN_POS = 0;
-    const float LIFT_UP_POS_LEFT = 1450.0;
-    const float LIFT_UP_POS_RIGHT = 1450.0;
-    const float LIFT_TOWER_LOW_POS_RIGHT = 1080; //TODO: Placeholder value
-    const float LIFT_TOWER_LOW_POS_LEFT = 1080; //TODO: Placeholder value
-    const float LIFT_TOWER_MID_POS_RIGHT = 1300; //TODO: Placeholder value
-    const float LIFT_TOWER_MID_POS_LEFT = 1300; //TODO: Placeholder value
-    // const float LIFT_TOWER_HIGH_POS_RIGHT = 1450; //TODO: Placeholder value
-    // const float LIFT_TOWER_HIGH_POS_LEFT = 1450; //TODO: Placeholder value
+    const float LIFT_UP_POS_LEFT = 2204;
+    const float LIFT_UP_POS_RIGHT = 2224;
+    const float LIFT_TOWER_LOW_POS_RIGHT = 1800;
+    const float LIFT_TOWER_LOW_POS_LEFT = 1800;
+    const float LIFT_TOWER_MID_POS_RIGHT = 2200;
+    const float LIFT_TOWER_MID_POS_LEFT = 2200;
     /* End lift block */
 
 
     /* Begin claw block */
-    const int CLAW_MOTOR_PORT = 15;
+    const int CLAW_MOTOR_PORT = 13;
     const int CLAW_MOTOR_POS_OPEN = 600; // TODO: Placeholder value
     const int CLAW_MOTOR_POS_CLOSED = 450;
     /* End claw block */
@@ -54,8 +52,8 @@ namespace bindings {
     const auto LIFT_POS_DOWN = okapi::ControllerDigital::down;
     const auto LIFT_POS_TOWER_LOW = okapi::ControllerDigital::Y; // TODO: Placeholder value
     const auto LIFT_POS_TOWER_MID = okapi::ControllerDigital::B; // TODO: Placeholder value
-    const auto LIFT_UP_ONE_CUBE = okapi::ControllerDigital::L1;
-    const auto LIFT_DOWN_ONE_CUBE = okapi::ControllerDigital::L2;
+    const auto CLAW_MANUAL_CLOSE = okapi::ControllerDigital::L1;
+    const auto CLAW_MANUAL_OPEN = okapi::ControllerDigital::L2;
     const auto LIFT_MOVE_UP = okapi::ControllerDigital::R1; // TODO: Placeholder value
     const auto LIFT_MOVE_DOWN = okapi::ControllerDigital::R2; // TODO: Placeholder value
 
@@ -65,7 +63,9 @@ namespace bindings {
 }
 
 namespace constants {
-    const int MOTOR_MOVE_MAX = 12000;
+    const int MOTOR_MAX_VOLTAGE = 12000;
+
+    const int CLAW_MOVE_VELOCITY = 60;
 
     const std::int32_t LIFT_UP_VELOCITY = 75;
     const std::int32_t LIFT_DOWN_VELOCITY = 50;
