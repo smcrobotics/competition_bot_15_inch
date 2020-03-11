@@ -6,9 +6,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 namespace util {
-    // helper function to create motor and set brake mode
     unique_ptr<okapi::Motor> initMotor(int port, okapi::AbstractMotor::gearset gearset) {
-        // E_MOTOR_GEARSET_18 is for 200rpm motors, default for v5 smart motor
         unique_ptr<okapi::Motor> motor = make_unique<okapi::Motor>(port);
         motor->setBrakeMode(constants::OKAPI_BRAKE);
         motor->setGearing(gearset);
@@ -28,4 +26,3 @@ namespace util {
     }
 
 }
-

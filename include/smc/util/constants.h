@@ -50,16 +50,18 @@ namespace bindings {
     // TODO: when all buttons have been mapped, make a comment describing what each one does
     const auto LIFT_POS_UP = okapi::ControllerDigital::up;
     const auto LIFT_POS_DOWN = okapi::ControllerDigital::down;
-    const auto LIFT_POS_TOWER_LOW = okapi::ControllerDigital::Y; // TODO: Placeholder value
-    const auto LIFT_POS_TOWER_MID = okapi::ControllerDigital::B; // TODO: Placeholder value
+    const auto LIFT_POS_TOWER_LOW = okapi::ControllerDigital::Y;
+    const auto LIFT_POS_TOWER_MID = okapi::ControllerDigital::B;
+    const auto LIFT_MOVE_UP = okapi::ControllerDigital::R1;
+    const auto LIFT_MOVE_DOWN = okapi::ControllerDigital::R2;
+
     const auto CLAW_MANUAL_CLOSE = okapi::ControllerDigital::L1;
     const auto CLAW_MANUAL_OPEN = okapi::ControllerDigital::L2;
-    const auto LIFT_MOVE_UP = okapi::ControllerDigital::R1; // TODO: Placeholder value
-    const auto LIFT_MOVE_DOWN = okapi::ControllerDigital::R2; // TODO: Placeholder value
-
     const auto TOGGLE_CLAW = okapi::ControllerDigital::right;
 
     const auto DRIVE_BRAKE_TOGGLE = okapi::ControllerDigital::X;
+
+    // A is used to debug autonomous, leave that button unbound
 }
 
 namespace constants {

@@ -26,27 +26,21 @@ namespace subsystems {
     }
 
     void Lift::update() {
-        if (top_limit_switch->isPressed() && limit_timeout_top == 0) {
+        if (top_limit_switch->isPressed()) {
             if (left_motor->getActualVelocity() > 0 && right_motor->getActualVelocity() > 0) {
                 left_motor->moveAbsolute(left_motor->getPosition(), 1);
                 right_motor->moveAbsolute(right_motor->getPosition(), 1);
-                // limit_timeout_top = 1000;
             }
-        } else if (limit_timeout_top > 0) {
-            limit_timeout_top--;
         }
         
-        if (bottom_limit_switch->isPressed() && limit_timeout_bottom == 0) {
+        if (bottom_limit_switch->isPressed()) {
             left_motor->tarePosition();
             right_motor->tarePosition();
                 
             if (left_motor->getActualVelocity() < 0 || right_motor->getActualVelocity() < 0) {
                 left_motor->moveAbsolute(0, 1);
                 right_motor->moveAbsolute(0, 1);
-                // limit_timeout_bottom = 1000;
             }
-        } else if (limit_timeout_bottom > 0) {
-            limit_timeout_bottom--;
         }
     }
 
@@ -73,22 +67,6 @@ namespace subsystems {
                 right_motor->moveAbsolute(robot::LIFT_TOWER_MID_POS_RIGHT, velocity);
                 break;
         }
-    }
-
-    void Lift::raiseByOneCube() {
-        // cout << "raise called" << endl;
-        auto lift = Lift::getInstance();
-        int diff = 206;
-        lift->left_motor->moveAbsolute(lift->left_motor->getPosition() + diff, constants::LIFT_UP_VELOCITY);
-        lift->right_motor->moveAbsolute(lift->right_motor->getPosition() + diff, constants::LIFT_UP_VELOCITY);
-    }
-
-    void Lift::lowerByOneCube() {
-        // cout << "lower called" << endl;
-        auto lift = Lift::getInstance();
-        int diff = 206;
-        lift->left_motor->moveAbsolute(lift->left_motor->getPosition() - diff, constants::LIFT_DOWN_VELOCITY);
-        lift->right_motor->moveAbsolute(lift->right_motor->getPosition() - diff, constants::LIFT_DOWN_VELOCITY);
     }
 
     void Lift::printDebug() {
@@ -144,9 +122,5 @@ namespace subsystems {
 
         left_motor->moveVelocity(velocity);
         right_motor->moveVelocity(velocity);
-    }
-
-    std::pair<int, int> Lift::getPosition() {
-        return std::pair<int, int>(left_motor->getPosition(), right_motor->getPosition());
     }
 }

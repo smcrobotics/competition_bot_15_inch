@@ -10,16 +10,9 @@ namespace subsystems {
         claw_motor = util::initMotor(robot::CLAW_MOTOR_PORT, okapi::Motor::gearset::green);
         claw_motor->setBrakeMode(constants::OKAPI_BRAKE);
 
-        // Make sure claw is closed before we tare position
-        // claw_motor->moveVoltage(-constants::MOTOR_MAX_VOLTAGE);
-        // pros::delay(500);
-        // claw_motor->moveVoltage(0);
-
+        // NOTE: claw must start closed
         claw_motor->tarePosition();
         clawState = ClawState::CLOSED;
-
-
-        cout << "claw initialized" << endl;
     }
 
     Claw * Claw::getInstance() {
@@ -61,13 +54,7 @@ namespace subsystems {
     }
 
     void Claw::moveManual(int velocity) {
-        // if (velocity < 0 && claw_motor->getPosition() < robot::CLAW_MOTOR_POS_CLOSED) {
-        //     return;
-        // }
-        // if (velocity > 0 && claw_motor->getPosition() > robot::CLAW_MOTOR_POS_OPEN) {
-        //     return;
-        // }
-        
+        // NOTE: this has no safeguards for preventing motor from applying torque when at hard stops
         claw_motor->moveVelocity(velocity);
     }
 }

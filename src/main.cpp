@@ -70,29 +70,6 @@ void initialize() {
             .withLimits({0.3, 0.3, 0.3 })
             .withOutput(robot::chassis)
             .buildMotionProfileController();
-
-    // robot::profile_controller->generatePath({
-    //                                                 {89_cm, 0_cm, 0_deg},
-    //                                                 {0_in, 0_in, 0_deg}}, "forward"
-    // );
-
-    // robot::profile_controller->generatePath({{89_cm, 0_in, 0_deg},
-    //                                                 {67_cm, 85_cm, -90_deg}}, "toCube" // Profile name
-    // );
-
-    // robot::profile_controller->generatePath({{67_cm, 85_cm, -90_deg},
-    //                                          {4_cm, 91.5_cm, 0_deg}}, "toTower");
-
-   // bool starts_on_red_side = sideIndicate::getSide();
-   //  if (starts_on_red_side) {
-   //      robot::profile_controller->generatePath({
-   //          {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for red
-   //      );
-   //  } else {
-   //      robot::profile_controller->generatePath({
-   //          {0_ft, 0_in, 0_deg}}, "autonomous_path" // Profile name for blue
-   //      );
-   //  }
 }
 
 /**
@@ -127,16 +104,10 @@ void competition_initialize() {}
 
 
 void autonomous() {
+    // simple routine to move forward while pushing a cube into the score zone, then move backwards
     subsystems::Claw * claw = subsystems::Claw::getInstance();
     auto OPEN = subsystems::Claw::ClawState::OPEN;
     auto CLOSED = subsystems::Claw::ClawState::CLOSED;
-
-    // robot::chassis->getModel()->setBrakeMode(constants::OKAPI_BRAKE);
-
-    // robot::profile_controller->setTarget("forward");
-    // robot::profile_controller->waitUntilSettled();
-    // robot::profile_controller->setTarget("forward", true); // reverse back to initial position
-    // robot::profile_controller->waitUntilSettled();
 
     // drop claw
     subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_LOW);
@@ -149,20 +120,6 @@ void autonomous() {
     robot::chassis->moveDistance(3_ft);
     pros::delay(2000);
     robot::chassis->moveDistance(-3_ft);
-
-    // bool starts_on_red_side = false; // if we start on red side, mirror the path
-    // robot::profile_controller->setTarget("toCube", false, starts_on_red_side);
-    // robot::profile_controller->waitUntilSettled();
-    // claw->setClawState(CLOSED);
-
-    // // end push cube in
-
-    // robot::profile_controller->setTarget("toTower", false, starts_on_red_side);
-    // subsystems::Lift::getInstance()->moveToPosition(subsystems::Lift::TOWER_MID);
-    // robot::profile_controller->waitUntilSettled();
-    // claw->setClawState(OPEN);
-    
-    // robot::chassis->getModel()->setBrakeMode(constants::OKAPI_COAST);
 }
 
 
@@ -233,7 +190,7 @@ void initBindings(std::vector<Binding *> & bind_list) {
     }, nullptr));
 
    // //  TODO: Remove this before competition
-   // bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::L1), autonomous, nullptr, nullptr)); // Bind for auto test
+   // bind_list.emplace_back(new Binding(okapi::ControllerButton(okapi::ControllerDigital::A), autonomous, nullptr, nullptr)); // Bind for auto test
    //  Note: Auto bind is blocking
     /** End bind block **/
 }
