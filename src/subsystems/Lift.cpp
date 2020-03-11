@@ -11,8 +11,8 @@ using std::endl;
 
 namespace subsystems {
     Lift::Lift() : limit_timeout_bottom(0), limit_timeout_top(0), current_pos(DOWN) {
-        left_motor = util::initMotor(robot::LIFT_MOTOR_PORT_LEFT);
-        right_motor = util::initMotor(robot::LIFT_MOTOR_PORT_RIGHT);
+        left_motor = util::initMotor(robot::LIFT_MOTOR_PORT_LEFT, okapi::AbstractMotor::gearset::red);
+        right_motor = util::initMotor(robot::LIFT_MOTOR_PORT_RIGHT, okapi::AbstractMotor::gearset::red);
         top_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_UP);
         bottom_limit_switch = util::initLimitSwitch(robot::LIFT_POS_LIMIT_SWITCH_DOWN);
 
@@ -90,10 +90,15 @@ namespace subsystems {
         line++;
         out.clear();
         out.str("");
-        
+
         out << "[C] lV: " << left_motor->getVoltage();
         out << ", rV: " << right_motor->getVoltage();
-        out << ", rT: " << right_motor->getTemperature();
+
+        line++;
+        out.clear();
+        out.str("");
+
+        out << "[C] rT: " << right_motor->getTemperature();
         out << ", lT: " << left_motor->getTemperature();
 
         pros::lcd::clear_line(line);
